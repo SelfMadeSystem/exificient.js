@@ -1,48 +1,35 @@
 {
-  "name": "exificient.js",
-  "version": "0.0.5",
-  "description": "exi and exi4json parser in pure js",
+  "name": "@selfmadesystem/exificient.js",
+  "version": "0.0.8",
+  "author": "Daniel Peintner",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SelfMadeSystem/exificient.js.git"
+  },
   "main": "dist/exificient.js",
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "typescript-standard": "^0.3.30"
+  },
+  "bugs": {
+    "url": "https://github.com/SelfMadeSystem/exificient.js/issues"
+  },
+  "description": "exi and exi4json parser in pure js",
   "directories": {
     "test": "test"
   },
-  "scripts": {
-    "test": "mocha -r ts-node/register test/TypeScriptTest.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/EXIficient/exificient.js.git"
-  },
+  "files": [
+    "dist/exificient.js",
+    "dist/xml-parser.js",
+    "dist/exificient.d.ts"
+  ],
+  "homepage": "https://github.com/SelfMadeSystem/exificient.js#readme",
   "keywords": [
     "exi",
     "json"
   ],
-  "author": "Daniel Peintner",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/EXIficient/exificient.js/issues"
-  },
-  "homepage": "https://github.com/EXIficient/exificient.js#readme",
-  "files": [
-    "dist/exificient.js",
-    "dist/xml-parser.js"
-  ],
-  "dependencies": {
-    "del": "^2.2.0",
-    "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-uglify": "^1.5.3",
-    "tsc": "^1.20150623.0"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.0.1",
-    "@types/mocha": "^2.2.41",
-    "chai": "^4.1.0",
-    "mocha": "^3.5.0",
-    "ts-node": "^3.3.0",
-    "typescript": "^2.3.4",
-    "typescript-standard": "^0.3.30"
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
   }
 }

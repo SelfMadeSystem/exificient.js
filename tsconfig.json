@@ -1,10 +1,10 @@
 {
-    "compilerOptions": {
-        "outDir": "./dist",
-        "allowJs": true,
-        "target": "es5"
-    },
-    "include": [
-        "./src/**/*"
-    ]
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./dist",
+    "outDir": "./dist",
+    "target": "es2015",
+    "module": "es2015"
+  },
+  "include": ["./src/**/*"]
 }

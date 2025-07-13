@@ -2,7 +2,7 @@
 
 // export * from './exificient'
 
-const MAX_EXI_FLOAT_DIGITS = 6; // -1 indicates no rounding
+export const MAX_EXI_FLOAT_DIGITS = 6; // -1 indicates no rounding
 
 /*******************************************************************************
  * 
@@ -80,7 +80,7 @@ enum DatetimeType {
 }
 
 
-enum SimpleDatatypeType {
+export enum SimpleDatatypeType {
 	STRING,
 	FLOAT,
 	UNSIGNED_INTEGER,
@@ -742,7 +742,7 @@ abstract class AbtractEXICoder {
  * 
  ******************************************************************************/
 
-class BitInputStream {
+export class BitInputStream {
 
 	// const
     readonly ERROR_EOF = -3;
@@ -959,8 +959,7 @@ class BitInputStream {
 }
 
 
-// export
-class EXIDecoder extends AbtractEXICoder {
+export class EXIDecoder extends AbtractEXICoder {
 
 	private bitStream : BitInputStream;
 	private eventHandler: EventHandler[];
@@ -1755,7 +1754,7 @@ class XMLEventHandler extends EventHandler {
  ******************************************************************************/
 
  
-class BitOutputStream {
+export class BitOutputStream {
 	/** array buffer */
 	uint8Array = new Uint8Array(8); // initial size
 	/** Current byte buffer */
@@ -2050,7 +2049,7 @@ class DateTimeValue {
 }
 
 // export
-class EXIEncoder extends AbtractEXICoder {
+export class EXIEncoder extends AbtractEXICoder {
 
 	bitStream : BitOutputStream;
 	elementContext : ElementContextEntry [];
@@ -2959,7 +2958,7 @@ const jsonGrammars = '{"qnames":{"namespaceContext":[{"uriID":0,"uri":"","qnameC
 const jsonGrammarsObject = Grammars.fromJson(JSON.parse(jsonGrammars));
 
 
-class EXI4JSONDecoder extends EXIDecoder  {
+export class EXI4JSONDecoder extends EXIDecoder  {
 	constructor() {
 		// Note: JSON grammars (see variable jsonGrammarsObject) is implicit
 		super(jsonGrammarsObject, {});
@@ -2967,7 +2966,7 @@ class EXI4JSONDecoder extends EXIDecoder  {
 }
 
 
-class EXI4JSONEncoder extends EXIEncoder {
+export class EXI4JSONEncoder extends EXIEncoder {
 
 	constructor() {
 		// Note: JSON grammars (see variable jsonGrammarsObject) is implicit
@@ -3325,7 +3324,7 @@ class EXI4JSONEncoder extends EXIEncoder {
 
 
 
-class JSONEventHandler extends EventHandler {
+export class JSONEventHandler extends EventHandler {
 
 //	this.openTag;
 //	this.openTagKey;
@@ -3402,9 +3401,9 @@ class JSONEventHandler extends EventHandler {
 		var value;
 		
 		if(top === "number") {
-			value = new Number(this.chars);
+			value = Number(this.chars);
 		} else if (top === "string") {
-			value = new String(this.chars);
+			value = String(this.chars);
 		} else if (top === "boolean") {
 			value = (this.chars == 'true');
 		} else if (top === "null") {

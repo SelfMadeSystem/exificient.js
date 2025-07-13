@@ -1,12 +1,6 @@
-"use strict";
 /*! exificient.js v0.0.7-SNAPSHOT | (c) 2018 Siemens AG | The MIT License (MIT) */
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 // export * from './exificient'
-var MAX_EXI_FLOAT_DIGITS = 6; // -1 indicates no rounding
+export const MAX_EXI_FLOAT_DIGITS = 6; // -1 indicates no rounding
 /*******************************************************************************
  *
  * S H A R E D - P A R T
@@ -74,7 +68,7 @@ var DatetimeType;
     /** time represents an instant of time that recurs every day */
     DatetimeType[DatetimeType["time"] = 7] = "time";
 })(DatetimeType || (DatetimeType = {}));
-var SimpleDatatypeType;
+export var SimpleDatatypeType;
 (function (SimpleDatatypeType) {
     SimpleDatatypeType[SimpleDatatypeType["STRING"] = 0] = "STRING";
     SimpleDatatypeType[SimpleDatatypeType["FLOAT"] = 1] = "FLOAT";
@@ -106,134 +100,115 @@ var SimpleDatatypeType;
     static LIST = new SimpleDatatypeType("LIST");
 }
 */
-var StringTableEntry = /** @class */ (function () {
-    function StringTableEntry(namespaceID, localNameID, value, globalValueID, localValueID) {
+class StringTableEntry {
+    constructor(namespaceID, localNameID, value, globalValueID, localValueID) {
         this.namespaceID = namespaceID;
         this.localNameID = localNameID;
         this.value = value;
         this.globalValueID = globalValueID;
         this.localValueID = localValueID;
     }
-    return StringTableEntry;
-}());
-var StringTable = /** @class */ (function () {
-    function StringTable() {
+}
+class StringTable {
+    constructor() {
         this.strings = new Array();
     }
-    StringTable.prototype.getNumberOfGlobalStrings = function () {
+    getNumberOfGlobalStrings() {
         return this.strings.length;
-    };
-    StringTable.prototype.getNumberOfLocalStrings = function (namespaceID, localNameID) {
-        var cnt = 0;
-        for (var i = 0; i < this.strings.length; i++) {
+    }
+    getNumberOfLocalStrings(namespaceID, localNameID) {
+        let cnt = 0;
+        for (let i = 0; i < this.strings.length; i++) {
             if (this.strings[i].namespaceID === namespaceID && this.strings[i].localNameID === localNameID) {
                 cnt++;
             }
         }
         return cnt;
-    };
-    StringTable.prototype.getLocalValue = function (namespaceID, localNameID, localValueID) {
-        for (var i = localValueID; i < this.strings.length; i++) {
+    }
+    getLocalValue(namespaceID, localNameID, localValueID) {
+        for (let i = localValueID; i < this.strings.length; i++) {
             if (this.strings[i].namespaceID === namespaceID && this.strings[i].localNameID === localNameID
                 && this.strings[i].localValueID === localValueID) {
                 return this.strings[i];
             }
         }
         return null;
-    };
-    StringTable.prototype.getGlobalValue = function (globalValueID) {
+    }
+    getGlobalValue(globalValueID) {
         if (this.strings.length > globalValueID) {
             return this.strings[globalValueID];
         }
         else {
             return null;
         }
-    };
-    StringTable.prototype.addValue = function (namespaceID, localNameID, value) {
-        var globalValueID = this.strings.length;
-        var localValueID = this.getNumberOfLocalStrings(namespaceID, localNameID);
+    }
+    addValue(namespaceID, localNameID, value) {
+        let globalValueID = this.strings.length;
+        let localValueID = this.getNumberOfLocalStrings(namespaceID, localNameID);
         this.strings.push(new StringTableEntry(namespaceID, localNameID, value, globalValueID, localValueID));
-    };
-    StringTable.prototype.getStringTableEntry = function (value) {
-        for (var i = 0; i < this.strings.length; i++) {
+    }
+    getStringTableEntry(value) {
+        for (let i = 0; i < this.strings.length; i++) {
             if (this.strings[i].value === value) {
                 return this.strings[i];
             }
         }
         return null;
-    };
-    return StringTable;
-}());
-var QNameContext = /** @class */ (function () {
-    function QNameContext() {
     }
-    return QNameContext;
-}());
-var NamespaceContext = /** @class */ (function () {
-    function NamespaceContext() {
-    }
-    return NamespaceContext;
-}());
-var QNames = /** @class */ (function () {
-    function QNames() {
-    }
-    return QNames;
-}());
-var Production = /** @class */ (function () {
-    function Production(event, nextGrammarID) {
+}
+class QNameContext {
+}
+class NamespaceContext {
+}
+class QNames {
+}
+class Production {
+    constructor(event, nextGrammarID) {
         this.event = event;
         this.nextGrammarID = nextGrammarID;
     }
-    return Production;
-}());
-var Grammar = /** @class */ (function () {
-    function Grammar(grammarID, type, production) {
+}
+class Grammar {
+    constructor(grammarID, type, production) {
         this.grammarID = grammarID;
         this.type = type;
         this.production = production;
     }
-    Grammar.prototype.isTypeCastable = function () {
+    isTypeCastable() {
         return false; // TODO
-    };
-    Grammar.prototype.isNillable = function () {
-        return false; // TODO
-    };
-    return Grammar;
-}());
-var Grs = /** @class */ (function () {
-    function Grs() {
     }
-    return Grs;
-}());
-var SimpleDatatype = /** @class */ (function () {
-    function SimpleDatatype(type) {
+    isNillable() {
+        return false; // TODO
+    }
+}
+class Grs {
+}
+class SimpleDatatype {
+    constructor(type) {
         this.type = type;
     }
-    return SimpleDatatype;
-}());
+}
 /*
 class DatetimeDatatype extends SimpleDatatype {
     datetimeType : DatetimeType;
 }
 */
 // export
-var Grammars = /** @class */ (function () {
-    function Grammars() {
-    }
-    Grammars.fromJson = function (json) {
-        var schemaLess = false;
+class Grammars {
+    static fromJson(json) {
+        let schemaLess = false;
         if (json == null || json == undefined) {
             // schema-less grammars
             json = JSON.parse('{"qnames":{"namespaceContext":[{"uriID":0,"uri":"","qnameContext":[]},{"uriID":1,"uri":"http://www.w3.org/XML/1998/namespace","qnameContext":[{"uriID":1,"localNameID":0,"localName":"base"},{"uriID":1,"localNameID":1,"localName":"id"},{"uriID":1,"localNameID":2,"localName":"lang"},{"uriID":1,"localNameID":3,"localName":"space"}]},{"uriID":2,"uri":"http://www.w3.org/2001/XMLSchema-instance","qnameContext":[{"uriID":2,"localNameID":0,"localName":"nil"},{"uriID":2,"localNameID":1,"localName":"type"}]}]},"simpleDatatypes":[],"grs":{"documentGrammarID":0,"fragmentGrammarID":3,"grammar":[{"grammarID":"0","type":"document","production":[{"event":"startDocument","nextGrammarID":1}]},{"grammarID":"1","type":"docContent","production":[{"event":"startElementGeneric","nextGrammarID":2}]},{"grammarID":"2","type":"docEnd","production":[{"event":"endDocument","nextGrammarID":-1}]},{"grammarID":"3","type":"fragment","production":[{"event":"startDocument","nextGrammarID":4}]},{"grammarID":"4","type":"fragmentContent","production":[{"event":"startElementGeneric","nextGrammarID":4},{"event":"endDocument","nextGrammarID":-1}]}]}}');
             schemaLess = true;
         }
         // copy content as is
-        var grammars = json;
+        let grammars = json;
         grammars.isSchemaLess = schemaLess;
         console.log("SchemaLess: " + grammars.isSchemaLess);
         // fix enum string to numbers
         if (grammars.simpleDatatypes != undefined) {
-            for (var i = 0; i < grammars.simpleDatatypes.length; i++) {
+            for (let i = 0; i < grammars.simpleDatatypes.length; i++) {
                 // string to enum
                 grammars.simpleDatatypes[i].type = SimpleDatatypeType["" + grammars.simpleDatatypes[i].type];
                 //  listType
@@ -247,21 +222,20 @@ var Grammars = /** @class */ (function () {
             }
         }
         // fix GrammarType and EventType
-        for (var i = 0; i < grammars.grs.grammar.length; i++) {
-            var gi = grammars.grs.grammar[i];
+        for (let i = 0; i < grammars.grs.grammar.length; i++) {
+            let gi = grammars.grs.grammar[i];
             gi.type = GrammarType["" + gi.type];
             // grammars.grs.grammar[i].type = GrammarType["" + grammars.grs.grammar[i].type];
-            var prods = grammars.grs.grammar[i].production;
-            for (var k = 0; k < prods.length; k++) {
+            let prods = grammars.grs.grammar[i].production;
+            for (let k = 0; k < prods.length; k++) {
                 prods[k].event = EventType["" + prods[k].event];
             }
         }
         return grammars;
-    };
-    return Grammars;
-}());
-var AbtractEXICoder = /** @class */ (function () {
-    function AbtractEXICoder(grammars, options) {
+    }
+}
+class AbtractEXICoder {
+    constructor(grammars, options) {
         this.grammars = grammars;
         // this.grammarsCopy = Object.create(grammars);
         // Object.assign(this.grammars, grammars);
@@ -281,8 +255,8 @@ var AbtractEXICoder = /** @class */ (function () {
             }
         }
     }
-    AbtractEXICoder.prototype.getGrammar = function (grammarID) {
-        var nextGrammar;
+    getGrammar(grammarID) {
+        let nextGrammar;
         if (grammarID >= 0) {
             // static grammars
             nextGrammar = this.grammars.grs.grammar[grammarID];
@@ -293,27 +267,27 @@ var AbtractEXICoder = /** @class */ (function () {
             nextGrammar = this.runtimeGrammars[rid];
         }
         return nextGrammar;
-    };
-    AbtractEXICoder.prototype.getNumberOfQNames = function (grammars) {
-        var n = 0;
-        for (var i = 0; i < grammars.qnames.namespaceContext.length; i++) {
+    }
+    getNumberOfQNames(grammars) {
+        let n = 0;
+        for (let i = 0; i < grammars.qnames.namespaceContext.length; i++) {
             n += grammars.qnames.namespaceContext[i].qnameContext.length;
         }
         return n;
-    };
+    }
     // WARNING: not specified in EXI 1.0 core (is extension)
-    AbtractEXICoder.prototype.setSharedStrings = function (sharedStrings) {
+    setSharedStrings(sharedStrings) {
         this.sharedStrings = sharedStrings;
         console.log("Set sharedStrings: " + this.sharedStrings);
-    };
-    AbtractEXICoder.prototype.init = function () {
+    }
+    init() {
         // this.grammars = this.grammarsCopy;
         // re-init (qnames) 
         if (this.grammars.numberOfQNames === undefined || this.grammars.numberOfQNames == null) {
             // first time..store information for resetting grammar qnames
             this.grammars.numberOfQNames = new Array();
-            for (var i_1 = 0; i_1 < this.grammars.qnames.namespaceContext.length; i_1++) {
-                this.grammars.numberOfQNames.push(this.grammars.qnames.namespaceContext[i_1].qnameContext.length);
+            for (let i = 0; i < this.grammars.qnames.namespaceContext.length; i++) {
+                this.grammars.numberOfQNames.push(this.grammars.qnames.namespaceContext[i].qnameContext.length);
             }
         }
         else {
@@ -321,9 +295,9 @@ var AbtractEXICoder = /** @class */ (function () {
             while (this.grammars.numberOfQNames.length > this.grammars.qnames.namespaceContext.length) {
                 this.grammars.qnames.namespaceContext.pop();
             }
-            for (var i_2 = 0; i_2 < this.grammars.qnames.namespaceContext.length; i_2++) {
-                while (this.grammars.qnames.namespaceContext[i_2].qnameContext.length > this.grammars.numberOfQNames[i_2]) {
-                    this.grammars.qnames.namespaceContext[i_2].qnameContext.pop();
+            for (let i = 0; i < this.grammars.qnames.namespaceContext.length; i++) {
+                while (this.grammars.qnames.namespaceContext[i].qnameContext.length > this.grammars.numberOfQNames[i]) {
+                    this.grammars.qnames.namespaceContext[i].qnameContext.pop();
                 }
             }
         }
@@ -339,18 +313,18 @@ var AbtractEXICoder = /** @class */ (function () {
         // this.runtimeQNameContexts = [];
         this.runtimeGlobalElements = {};
         this.runtimeGrammars = [];
-    };
-    AbtractEXICoder.prototype.getUri = function (namespace) {
-        var namespaceContext; // undefined
+    }
+    getUri(namespace) {
+        let namespaceContext; // undefined
         for (var i = 0; i < this.grammars.qnames.namespaceContext.length; i++) {
             if (this.grammars.qnames.namespaceContext[i].uri === namespace) {
                 return this.grammars.qnames.namespaceContext[i];
             }
         }
         return namespaceContext;
-    };
+    }
     // returns the required number of bits for a given number of characteristics
-    AbtractEXICoder.prototype.getCodeLength = function (characteristics) {
+    getCodeLength(characteristics) {
         if (characteristics < 0) {
             // error
             throw new Error("Error: Code length for " + characteristics + " not possible");
@@ -423,8 +397,8 @@ var AbtractEXICoder = /** @class */ (function () {
         else {
             return Math.ceil(Math.log(characteristics) / Math.log(2));
         }
-    };
-    AbtractEXICoder.prototype.getCodeLengthForGrammar = function (grammar) {
+    }
+    getCodeLengthForGrammar(grammar) {
         if (grammar.type === GrammarType.document || grammar.type === GrammarType.fragment) {
             return 0;
         }
@@ -465,8 +439,8 @@ var AbtractEXICoder = /** @class */ (function () {
             throw new Error("Unknown grammar type: " + grammar.type);
             // return -1;
         }
-    };
-    AbtractEXICoder.prototype.get2ndCodeLengthForGrammar = function (grammar) {
+    }
+    get2ndCodeLengthForGrammar(grammar) {
         if (grammar.type === GrammarType.builtInStartTagContent) {
             // --> second level EE, AT(*), NS?, SC?, SE(*), CH, ER?, [CM?, PI?]
             // 4 options
@@ -482,8 +456,8 @@ var AbtractEXICoder = /** @class */ (function () {
             throw new Error("Unknown/unhandled 2nd grammar type: " + grammar.type);
             // return -1;
         }
-    };
-    AbtractEXICoder.prototype.get2ndEventCode = function (grammar, event) {
+    }
+    get2ndEventCode(grammar, event) {
         if (grammar.type === GrammarType.builtInStartTagContent) {
             // --> second level EE, AT(*), NS?, SC?, SE(*), CH, ER?, [CM?, PI?]
             // 4 options
@@ -523,8 +497,8 @@ var AbtractEXICoder = /** @class */ (function () {
             // unknown/unhandled grammar type
             throw new Error("Unknown/unhandled 2nd grammar type: " + grammar.type);
         }
-    };
-    AbtractEXICoder.prototype.get2ndEvent = function (grammar, ec2) {
+    }
+    get2ndEvent(grammar, ec2) {
         if (grammar.type === GrammarType.builtInStartTagContent) {
             // --> second level EE, AT(*), NS?, SC?, SE(*), CH, ER?, [CM?, PI?]
             // 4 options
@@ -559,9 +533,9 @@ var AbtractEXICoder = /** @class */ (function () {
             // unknown/unhandled grammar type
             throw new Error("Unknown/unhandled 2nd grammar type: " + grammar.type);
         }
-    };
-    AbtractEXICoder.prototype.getQNameContext = function (namespaceContext, localName) {
-        var qnameContext = undefined; // undefined by default
+    }
+    getQNameContext(namespaceContext, localName) {
+        let qnameContext = undefined; // undefined by default
         if (namespaceContext.qnameContext != undefined) {
             for (var i = 0; i < namespaceContext.qnameContext.length; i++) {
                 if (namespaceContext.qnameContext[i].localName === localName) {
@@ -575,8 +549,8 @@ var AbtractEXICoder = /** @class */ (function () {
             namespaceContext.qnameContext = new Array(); // QNameContext[]
         }
         return qnameContext;
-    };
-    AbtractEXICoder.prototype.getGlobalStartElement = function (qnameContext) {
+    }
+    getGlobalStartElement(qnameContext) {
         if (qnameContext.globalElementGrammarID !== undefined) {
             // there is a global (static) element grammar
             return this.grammars.grs.grammar[qnameContext.globalElementGrammarID];
@@ -585,7 +559,7 @@ var AbtractEXICoder = /** @class */ (function () {
         else {
             // check runtime global element grammars
             var seGrammar; // undefined
-            var key = qnameContext.uriID + "," + qnameContext.localNameID;
+            let key = qnameContext.uriID + "," + qnameContext.localNameID;
             if (key in this.runtimeGlobalElements) {
                 return this.runtimeGlobalElements[key];
             }
@@ -595,12 +569,12 @@ var AbtractEXICoder = /** @class */ (function () {
             //			if(seGrammar === undefined) {
             // create Built-in Element Grammar (ids smaller than zero)
             // var id = ((this.runtimeGrammars.length*2)+1) * (-1);
-            var id = (this.runtimeGrammars.length + 1) * (-1);
+            let id = (this.runtimeGrammars.length + 1) * (-1);
             seGrammar = new Grammar(id, GrammarType.builtInStartTagContent, new Array()); //new Production[0]);
-            var p = new Array(); // Production[0];
-            var p0 = new Production(EventType.endElement, -1);
+            let p = new Array(); // Production[0];
+            let p0 = new Production(EventType.endElement, -1);
             p.push(p0);
-            var elementContent = new Grammar(id - 1, GrammarType.builtInElementContent, p);
+            let elementContent = new Grammar(id - 1, GrammarType.builtInElementContent, p);
             elementContent["elementContent"] = elementContent;
             seGrammar["elementContent"] = elementContent;
             this.runtimeGlobalElements[key] = seGrammar;
@@ -609,58 +583,57 @@ var AbtractEXICoder = /** @class */ (function () {
             return seGrammar;
             //			}
         }
-    };
-    AbtractEXICoder.prototype.learnStartElement = function (grammar, seGrammarID, seQname) {
+    }
+    learnStartElement(grammar, seGrammarID, seQname) {
         // TODO builtIn FragmentGrammar
         if (grammar.type === GrammarType.builtInStartTagContent || grammar.type === GrammarType.builtInElementContent) {
             // learn SE
-            var ng = new Production(EventType.startElement, grammar.elementContent.grammarID);
+            let ng = new Production(EventType.startElement, grammar.elementContent.grammarID);
             ng.startElementGrammarID = seGrammarID;
             ng.startElementNamespaceID = seQname.uriID;
             ng.startElementLocalNameID = seQname.localNameID;
             grammar.production.splice(0, 0, ng);
             // grammar.production.push(ng);
         }
-    };
-    AbtractEXICoder.prototype.learnAttribute = function (grammar, atQname) {
+    }
+    learnAttribute(grammar, atQname) {
         // TODO xsi:type is not learned
         if (grammar.type === GrammarType.builtInStartTagContent || grammar.type === GrammarType.builtInElementContent) {
             // learn AT
-            var ng = new Production(EventType.attribute, grammar.grammarID);
+            let ng = new Production(EventType.attribute, grammar.grammarID);
             ng.attributeDatatypeID = undefined; // STRING default
             ng.attributeNamespaceID = atQname.uriID;
             ng.attributeLocalNameID = atQname.localNameID;
             grammar.production.splice(0, 0, ng);
             // grammar.production.push(ng);
         }
-    };
-    AbtractEXICoder.prototype.learnCharacters = function (grammar) {
+    }
+    learnCharacters(grammar) {
         if (grammar.type === GrammarType.builtInStartTagContent || grammar.type === GrammarType.builtInElementContent) {
             // learn CH
-            var ng = new Production(EventType.characters, grammar.elementContent.grammarID);
+            let ng = new Production(EventType.characters, grammar.elementContent.grammarID);
             ng.charactersDatatypeID = undefined;
             grammar.production.splice(0, 0, ng);
             // grammar.production.push(ng);
         }
-    };
-    AbtractEXICoder.prototype.learnEndElement = function (grammar) {
+    }
+    learnEndElement(grammar) {
         if (grammar.type === GrammarType.builtInStartTagContent || grammar.type === GrammarType.builtInElementContent) {
             // learn EE
-            var ng = new Production(EventType.endElement, grammar.elementContent.grammarID);
+            let ng = new Production(EventType.endElement, grammar.elementContent.grammarID);
             grammar.production.splice(0, 0, ng);
             // grammar.production.push(ng);
         }
-    };
-    AbtractEXICoder.DEFAULT_SIMPLE_DATATYPE = new SimpleDatatype(SimpleDatatypeType.STRING);
-    return AbtractEXICoder;
-}());
+    }
+}
+AbtractEXICoder.DEFAULT_SIMPLE_DATATYPE = new SimpleDatatype(SimpleDatatypeType.STRING);
 /*******************************************************************************
  *
  * D E C O D E R - P A R T
  *
  ******************************************************************************/
-var BitInputStream = /** @class */ (function () {
-    function BitInputStream(arrayBuffer) {
+export class BitInputStream {
+    constructor(arrayBuffer) {
         // const
         this.ERROR_EOF = -3;
         /** Current byte buffer */
@@ -676,7 +649,7 @@ var BitInputStream = /** @class */ (function () {
     /**
      * If buffer is empty, read byte from underlying byte array
      */
-    BitInputStream.prototype.readBuffer = function () {
+    readBuffer() {
         if (this.capacity === 0) {
             if (this.uint8Array.length > this.pos) {
                 this.buffer = this.uint8Array[this.pos++];
@@ -686,17 +659,17 @@ var BitInputStream = /** @class */ (function () {
                 this.errn = this.ERROR_EOF; // EOF
             }
         }
-    };
+    }
     /**
      * Decodes and returns an n-bit unsigned integer.
      */
-    BitInputStream.prototype.decodeNBitUnsignedInteger = function (nbits, byteAligned) {
+    decodeNBitUnsignedInteger(nbits, byteAligned) {
         if (byteAligned !== undefined && byteAligned) {
             while (nbits % 8 !== 0) {
                 nbits++;
             }
-            var bitsRead = 0;
-            var result = 0;
+            let bitsRead = 0;
+            let result = 0;
             while (bitsRead < nbits) {
                 // result = (result << 8) | is.read();
                 result += (this.decodeNBitUnsignedInteger(8, false) << bitsRead);
@@ -719,7 +692,7 @@ var BitInputStream = /** @class */ (function () {
                 this.readBuffer();
                 // read bits
                 if (this.errn === 0) {
-                    var result = 0;
+                    let result = 0;
                     if (nbits <= this.capacity) {
                         /* read the bits in one step */
                         this.capacity = this.capacity - nbits;
@@ -760,18 +733,18 @@ var BitInputStream = /** @class */ (function () {
             }
         }
         return -1;
-    };
+    }
     /**
      * Decode an arbitrary precision non negative integer using a sequence of
      * octets. The most significant bit of the last octet is set to zero to
      * indicate sequence termination. Only seven bits per octet are used to
      * store the integer's value.
      */
-    BitInputStream.prototype.decodeUnsignedInteger = function () {
+    decodeUnsignedInteger() {
         // 0XXXXXXX ... 1XXXXXXX 1XXXXXXX
-        var intVal = 0;
-        var mul = 1;
-        var val = this.decodeNBitUnsignedInteger(8, false);
+        let intVal = 0;
+        let mul = 1;
+        let val = this.decodeNBitUnsignedInteger(8, false);
         while (val >= 128) {
             intVal = intVal + mul * (val - 128);
             val = this.decodeNBitUnsignedInteger(8, false);
@@ -809,15 +782,15 @@ var BitInputStream = /** @class */ (function () {
 
         return result;
         */
-    };
+    }
     /**
      * Decode an arbitrary precision integer using a sign bit followed by a
      * sequence of octets. The most significant bit of the last octet is set to
      * zero to indicate sequence termination. Only seven bits per octet are used
      * to store the integer's value.
      */
-    BitInputStream.prototype.decodeInteger = function (byteAligned) {
-        var i;
+    decodeInteger(byteAligned) {
+        let i;
         if (this.decodeNBitUnsignedInteger(1, byteAligned) === 0) {
             // positive
             i = this.decodeUnsignedInteger();
@@ -829,45 +802,41 @@ var BitInputStream = /** @class */ (function () {
         }
         console.log("\t" + " decodeInteger --> " + i);
         return i;
-    };
+    }
     /**
      * Decode the characters of a string whose length (#code-points) has already
      * been read.
      *
      * @return The character sequence as a string.
      */
-    BitInputStream.prototype.decodeStringOnly = function (length) {
-        var s = "";
-        var i;
+    decodeStringOnly(length) {
+        let s = "";
+        let i;
         for (i = 0; i < length; i++) {
             var codePoint = this.decodeUnsignedInteger();
             s += String.fromCharCode(codePoint);
         }
         return s;
-    };
+    }
     /**
      * Decode a string as a length-prefixed sequence of UCS codepoints, each of
      * which is encoded as an integer.
      *
      *  @return The character sequence as a string.
      */
-    BitInputStream.prototype.decodeString = function () {
+    decodeString() {
         return this.decodeStringOnly(this.decodeUnsignedInteger());
-    };
-    return BitInputStream;
-}());
-// export
-var EXIDecoder = /** @class */ (function (_super) {
-    __extends(EXIDecoder, _super);
-    function EXIDecoder(grammars, options) {
-        var _this = _super.call(this, grammars, options) || this;
-        _this.eventHandler = new Array();
-        return _this;
     }
-    EXIDecoder.prototype.registerEventHandler = function (handler) {
+}
+export class EXIDecoder extends AbtractEXICoder {
+    constructor(grammars, options) {
+        super(grammars, options);
+        this.eventHandler = new Array();
+    }
+    registerEventHandler(handler) {
         this.eventHandler.push(handler);
-    };
-    EXIDecoder.prototype.decodeHeader = function () {
+    }
+    decodeHeader() {
         // TODO cookie
         var distBits = this.bitStream.decodeNBitUnsignedInteger(2, false); // Distinguishing
         // Bits
@@ -886,8 +855,8 @@ var EXIDecoder = /** @class */ (function (_super) {
             throw new Error("Do not support format version " + formatVersion);
         }
         return 0;
-    };
-    EXIDecoder.prototype.decodeDatatypeValue = function (datatype, namespaceID, localNameID, isCharactersEvent) {
+    }
+    decodeDatatypeValue(datatype, namespaceID, localNameID, isCharactersEvent) {
         // Note: qnameContext == null --> CHARACTERS event
         if (datatype.type === SimpleDatatypeType.STRING) {
             this.decodeDatatypeValueString(namespaceID, localNameID, isCharactersEvent);
@@ -956,8 +925,8 @@ var EXIDecoder = /** @class */ (function (_super) {
         else {
             throw new Error("Unsupported datatype: " + datatype.type);
         }
-    };
-    EXIDecoder.prototype.decodeDatatypeValueString = function (namespaceID, localNameID, isCharactersEvent) {
+    }
+    decodeDatatypeValueString(namespaceID, localNameID, isCharactersEvent) {
         var s;
         var i = this.bitStream.decodeUnsignedInteger();
         // console.log("\t" + " String i: " + i );
@@ -1010,11 +979,11 @@ var EXIDecoder = /** @class */ (function (_super) {
                 eh.attribute(namespaceContext.uri, qnameContext.localName, s);
             }
         }
-    };
-    EXIDecoder.prototype.decodeDatatypeValueUnsignedInteger = function (namespaceID, localNameID, isCharactersEvent) {
-        var uint = this.bitStream.decodeUnsignedInteger();
+    }
+    decodeDatatypeValueUnsignedInteger(namespaceID, localNameID, isCharactersEvent) {
+        let uint = this.bitStream.decodeUnsignedInteger();
         console.log("\t" + " UNSIGNED_INTEGER = " + uint);
-        for (var i = 0; i < this.eventHandler.length; i++) {
+        for (let i = 0; i < this.eventHandler.length; i++) {
             var eh = this.eventHandler[i];
             if (isCharactersEvent) {
                 eh.characters(uint + "");
@@ -1025,8 +994,8 @@ var EXIDecoder = /** @class */ (function (_super) {
                 eh.attribute(namespaceContext.uri, qnameContext.localName, uint + "");
             }
         }
-    };
-    EXIDecoder.prototype.decodeDatatypeValueInteger = function (namespaceID, localNameID, isCharactersEvent) {
+    }
+    decodeDatatypeValueInteger(namespaceID, localNameID, isCharactersEvent) {
         var int = this.bitStream.decodeInteger(this.isByteAligned);
         console.log("\t" + " INTEGER = " + int);
         var i;
@@ -1041,8 +1010,8 @@ var EXIDecoder = /** @class */ (function (_super) {
                 eh.attribute(namespaceContext.uri, qnameContext.localName, int + "");
             }
         }
-    };
-    EXIDecoder.prototype.decodeDatatypeValueFloat = function (namespaceID, localNameID, isCharactersEvent) {
+    }
+    decodeDatatypeValueFloat(namespaceID, localNameID, isCharactersEvent) {
         var mantissa = this.bitStream.decodeInteger(this.isByteAligned);
         var exponent = this.bitStream.decodeInteger(this.isByteAligned);
         console.log("\t" + " float = " + mantissa + "E" + exponent);
@@ -1059,8 +1028,8 @@ var EXIDecoder = /** @class */ (function (_super) {
                     + exponent);
             }
         }
-    };
-    EXIDecoder.prototype.decodeDatatypeValueBoolean = function (namespaceID, localNameID, isCharactersEvent) {
+    }
+    decodeDatatypeValueBoolean(namespaceID, localNameID, isCharactersEvent) {
         var b = this.bitStream.decodeNBitUnsignedInteger(1, this.isByteAligned) === 0 ? false
             : true;
         console.log("\t" + " boolean = " + b);
@@ -1075,10 +1044,10 @@ var EXIDecoder = /** @class */ (function (_super) {
                 eh.attribute(namespaceContext.uri, qnameContext.localName, b + "");
             }
         }
-    };
-    EXIDecoder.prototype.decodeDatatypeValueEnumeration = function (enumValues, namespaceID, localNameID, isCharactersEvent) {
-        var index = this.bitStream.decodeNBitUnsignedInteger(this.getCodeLength(enumValues.length), this.isByteAligned);
-        var value = enumValues[index];
+    }
+    decodeDatatypeValueEnumeration(enumValues, namespaceID, localNameID, isCharactersEvent) {
+        let index = this.bitStream.decodeNBitUnsignedInteger(this.getCodeLength(enumValues.length), this.isByteAligned);
+        let value = enumValues[index];
         console.log("\t" + " enum = " + value);
         for (var i = 0; i < this.eventHandler.length; i++) {
             var eh = this.eventHandler[i];
@@ -1091,12 +1060,14 @@ var EXIDecoder = /** @class */ (function (_super) {
                 eh.attribute(namespaceContext.uri, qnameContext.localName, value);
             }
         }
-    };
-    EXIDecoder.prototype.decodeDatatypeValueDateTime = function (datetimeType, namespaceID, localNameID, isCharactersEvent) {
+    }
+    decodeDatatypeValueDateTime(datetimeType, namespaceID, localNameID, isCharactersEvent) {
         var year = 0, monthDay = 0, time = 0, fractionalSecs = 0;
         var presenceFractionalSecs = false;
         var sDatetime = "";
-        if (datetimeType === DatetimeType.date) {
+        if (datetimeType === DatetimeType.date
+        // || datatype.datetimeType == "gYearMonth"
+        ) {
             // YEAR_OFFSET = 2000
             // NUMBER_BITS_MONTHDAY = 9
             // MONTH_MULTIPLICATOR = 32
@@ -1134,44 +1105,44 @@ var EXIDecoder = /** @class */ (function (_super) {
                 eh.attribute(namespaceContext.uri, qnameContext.localName, sDatetime);
             }
         }
-    };
-    EXIDecoder.prototype.decodeElementContext = function (grammar, elementNamespaceID, elementLocalNameID) {
-        var popStack = false;
+    }
+    decodeElementContext(grammar, elementNamespaceID, elementLocalNameID) {
+        let popStack = false;
         while (!popStack) {
-            var codeLength = this.getCodeLengthForGrammar(grammar);
+            let codeLength = this.getCodeLengthForGrammar(grammar);
             console.log("\t" + "CodeLength == " + codeLength);
-            var ec = this.bitStream.decodeNBitUnsignedInteger(codeLength, this.isByteAligned); //
+            let ec = this.bitStream.decodeNBitUnsignedInteger(codeLength, this.isByteAligned); //
             console.log("\t" + "EventCode == " + ec);
-            var event_1 = void 0;
-            var prod = void 0;
+            let event;
+            let prod;
             if (ec >= grammar.production.length) {
                 // second level
-                var codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
-                var ec2 = this.bitStream.decodeNBitUnsignedInteger(codeLength2, this.isByteAligned); //
-                event_1 = this.get2ndEvent(grammar, ec2);
+                let codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
+                let ec2 = this.bitStream.decodeNBitUnsignedInteger(codeLength2, this.isByteAligned); //
+                event = this.get2ndEvent(grammar, ec2);
                 // TODO prod
                 // throw new Error("TODO Second event-code level " + grammar.type + ", ec2="+ec2 + " --> " + event);
             }
             else {
                 prod = grammar.production[ec];
-                event_1 = prod.event;
+                event = prod.event;
             }
-            var nextGrammar = void 0;
+            let nextGrammar;
             if (prod !== undefined) {
                 nextGrammar = this.getGrammar(prod.nextGrammarID);
             }
-            switch (event_1) {
+            switch (event) {
                 case EventType.startDocument:
                     console.log("> SD");
-                    for (var i = 0; i < this.eventHandler.length; i++) {
-                        var eh = this.eventHandler[i];
+                    for (let i = 0; i < this.eventHandler.length; i++) {
+                        let eh = this.eventHandler[i];
                         eh.startDocument();
                     }
                     break;
                 case EventType.endDocument:
                     console.log("< ED");
-                    for (var i = 0; i < this.eventHandler.length; i++) {
-                        var eh = this.eventHandler[i];
+                    for (let i = 0; i < this.eventHandler.length; i++) {
+                        let eh = this.eventHandler[i];
                         eh.endDocument();
                     }
                     popStack = true;
@@ -1183,14 +1154,14 @@ var EXIDecoder = /** @class */ (function (_super) {
                     // prod.startElementQNameID );
                     // console.log("\t" + "StartElement name " +
                     // getQNameContext(prod.startElementQNameID).localName);
-                    var seGrammar = void 0;
-                    var qnameContext = void 0;
-                    var namespaceContext = void 0;
+                    let seGrammar;
+                    let qnameContext;
+                    let namespaceContext;
                     if (prod !== undefined) {
                         // SE and SE_NS
                         namespaceContext = this.grammars.qnames.namespaceContext[prod.startElementNamespaceID];
                     }
-                    if (event_1 == EventType.startElement) {
+                    if (event == EventType.startElement) {
                         if (prod == undefined) {
                             throw new Error("Undefined Production for StartElement");
                         }
@@ -1198,7 +1169,7 @@ var EXIDecoder = /** @class */ (function (_super) {
                         qnameContext = namespaceContext.qnameContext[prod.startElementLocalNameID];
                         console.log(">> SE (" + qnameContext.localName + ")");
                     }
-                    else if (event_1 == EventType.startElementNS) {
+                    else if (event == EventType.startElementNS) {
                         // SE_NS
                         // decode local-name
                         qnameContext = this.decodeLocalName(namespaceContext);
@@ -1230,10 +1201,10 @@ var EXIDecoder = /** @class */ (function (_super) {
                             throw new Error("Unsupported grammar-type = " + grammar.type + " for SE " + qnameContext.localName);
                         }
                     }
-                    for (var i = 0; i < this.eventHandler.length; i++) {
-                        var eh = this.eventHandler[i];
-                        var ns = this.grammars.qnames.namespaceContext[qnameContext.uriID];
-                        var uri = ns.uri;
+                    for (let i = 0; i < this.eventHandler.length; i++) {
+                        let eh = this.eventHandler[i];
+                        let ns = this.grammars.qnames.namespaceContext[qnameContext.uriID];
+                        let uri = ns.uri;
                         // console.log("inform handler (" + uri + ", " + qnameContext.localName + ")");
                         eh.startElement(uri, qnameContext.localName);
                     }
@@ -1245,11 +1216,11 @@ var EXIDecoder = /** @class */ (function (_super) {
                     var namespaceContextEE = this.grammars.qnames.namespaceContext[elementNamespaceID];
                     var qnameContextEE = namespaceContextEE.qnameContext[elementLocalNameID];
                     console.log("<< EE (" + qnameContextEE.localName + ")");
-                    for (var i = 0; i < this.eventHandler.length; i++) {
-                        var eh = this.eventHandler[i];
+                    for (let i = 0; i < this.eventHandler.length; i++) {
+                        let eh = this.eventHandler[i];
                         eh.endElement(namespaceContextEE.uri, qnameContextEE.localName);
                     }
-                    if (event_1 === EventType.endElementGeneric) {
+                    if (event === EventType.endElementGeneric) {
                         this.learnEndElement(grammar);
                     }
                     popStack = true;
@@ -1261,7 +1232,7 @@ var EXIDecoder = /** @class */ (function (_super) {
                     // getQNameContext(prod.attributeQNameID).localName);
                     // console.log("\t" + "Attribute datatypeID " +
                     // prod.attributeDatatypeID );
-                    var datatypeA = void 0;
+                    let datatypeA;
                     if (prod.attributeDatatypeID === undefined || prod.attributeDatatypeID < 0) {
                         // learned AT
                         datatypeA = EXIEncoder.DEFAULT_SIMPLE_DATATYPE;
@@ -1270,13 +1241,13 @@ var EXIDecoder = /** @class */ (function (_super) {
                         datatypeA = this.grammars.simpleDatatypes[prod.attributeDatatypeID];
                     }
                     // console.log("\t" + "Attribute datatype " + datatype );
-                    var namespaceContextA = this.grammars.qnames.namespaceContext[prod.attributeNamespaceID];
-                    var qnameContextA = namespaceContextA.qnameContext[prod.attributeLocalNameID];
+                    let namespaceContextA = this.grammars.qnames.namespaceContext[prod.attributeNamespaceID];
+                    let qnameContextA = namespaceContextA.qnameContext[prod.attributeLocalNameID];
                     console.log("\t" + "AT (" + qnameContextA.localName + ")");
                     this.decodeDatatypeValue(datatypeA, prod.attributeNamespaceID, prod.attributeLocalNameID, false);
                     break;
                 case EventType.attributeGeneric:
-                    var atQName = this.decodeQName();
+                    let atQName = this.decodeQName();
                     console.log("\t" + "AT_Generic (" + atQName.localName + ")");
                     this.decodeDatatypeValue(EXIDecoder.DEFAULT_SIMPLE_DATATYPE, atQName.uriID, atQName.localNameID, false);
                     this.learnAttribute(grammar, atQName);
@@ -1284,7 +1255,7 @@ var EXIDecoder = /** @class */ (function (_super) {
                     break;
                 case EventType.characters:
                     // console.log("\t" + "Characters datatypeID " +
-                    var datatypeC = void 0;
+                    let datatypeC;
                     if (prod.charactersDatatypeID === undefined || prod.charactersDatatypeID < 0) {
                         // learned AT
                         datatypeC = EXIEncoder.DEFAULT_SIMPLE_DATATYPE;
@@ -1303,22 +1274,24 @@ var EXIDecoder = /** @class */ (function (_super) {
                     nextGrammar = grammar.elementContent;
                     break;
                 default:
-                    console.log("\t" + "Unknown event " + event_1);
-                    throw new Error("Unknown event " + event_1);
+                    console.log("\t" + "Unknown event " + event);
+                    throw new Error("Unknown event " + event);
+                // TODO error!
+                // popStack = true;
             }
             // console.log("\t" + "Event NextGrammarId " + prod.nextGrammarID);
             grammar = nextGrammar; // grammars.grs.grammar[prod.nextGrammarID];
         }
-    };
-    EXIDecoder.prototype.decodeQName = function () {
+    }
+    decodeQName() {
         // decode uri & local-name
         return this.decodeLocalName(this.decodeUri());
-    };
-    EXIDecoder.prototype.decodeUri = function () {
-        var n = this.getCodeLength(this.grammars.qnames.namespaceContext.length + 1); // numberEntries+1
-        var uriID = this.bitStream.decodeNBitUnsignedInteger(n, this.isByteAligned);
+    }
+    decodeUri() {
+        let n = this.getCodeLength(this.grammars.qnames.namespaceContext.length + 1); // numberEntries+1
+        let uriID = this.bitStream.decodeNBitUnsignedInteger(n, this.isByteAligned);
         console.log("n = " + n + ", uriID = " + uriID);
-        var namespaceContext;
+        let namespaceContext;
         if (uriID == 0) {
             // string value was not found
             // ==> zero (0) as an n-nit unsigned integer
@@ -1336,10 +1309,10 @@ var EXIDecoder = /** @class */ (function (_super) {
             console.log("found existing uri = '" + namespaceContext.uri + "'");
         }
         return namespaceContext;
-    };
-    EXIDecoder.prototype.decodeLocalName = function (namespaceContext) {
-        var length = this.bitStream.decodeUnsignedInteger();
-        var qnameContext;
+    }
+    decodeLocalName(namespaceContext) {
+        let length = this.bitStream.decodeUnsignedInteger();
+        let qnameContext;
         if (length > 0) {
             // string value was not found in local partition
             // ==> string literal is encoded as a String
@@ -1366,8 +1339,8 @@ var EXIDecoder = /** @class */ (function (_super) {
             qnameContext = namespaceContext.qnameContext[localNameID];
         }
         return qnameContext;
-    };
-    EXIDecoder.prototype.decode = function (uint8Array) {
+    }
+    decode(uint8Array) {
         this.init();
         this.bitStream = new BitInputStream(uint8Array);
         console.log("JSON Grammars: " + this.grammars);
@@ -1390,23 +1363,18 @@ var EXIDecoder = /** @class */ (function (_super) {
             this.decodeElementContext(docGr, -1, -1);
         }
         return errn;
-    };
-    return EXIDecoder;
-}(AbtractEXICoder));
-// export
-var EventHandler = /** @class */ (function () {
-    function EventHandler() {
     }
-    return EventHandler;
-}());
+}
+// export
+class EventHandler {
+}
 /* allows to retrieve XML by registering it as decoder handler */
-var PfxMapping = /** @class */ (function () {
-    function PfxMapping(pfx, namespace) {
+class PfxMapping {
+    constructor(pfx, namespace) {
         this.pfx = pfx;
         this.namespace = namespace;
     }
-    return PfxMapping;
-}());
+}
 /*
 class Stack<T> {
     _store: T[] = [];
@@ -1424,44 +1392,42 @@ class Stack<T> {
     }
 }
 */
-var XMLEventHandler = /** @class */ (function (_super) {
-    __extends(XMLEventHandler, _super);
-    function XMLEventHandler() {
-        var _this = _super.call(this) || this;
-        _this.nsDecls = []; // new Array<PfxMapping>();
-        return _this;
+class XMLEventHandler extends EventHandler {
+    constructor() {
+        super();
+        this.nsDecls = []; // new Array<PfxMapping>();
         // let people = new Map<string, Person>();
         // let map = new Map<string, string>(); 
         // this.xmlDecls = {}; // null; //  new Array(<string, string>); // new Map(); // new Array();
         // this.xmlDecls = new Array();
     }
-    XMLEventHandler.prototype.pushPfx = function () {
+    pushPfx() {
         this.nsDecls.push([]);
-    };
-    XMLEventHandler.prototype.addPfx = function (namespace) {
-        var pfx = "ns" + this.getPfxLength();
-        var pm = new PfxMapping(pfx, namespace);
+    }
+    addPfx(namespace) {
+        let pfx = "ns" + this.getPfxLength();
+        let pm = new PfxMapping(pfx, namespace);
         this.nsDecls[this.nsDecls.length - 1].push(pm);
         return pfx;
-    };
-    XMLEventHandler.prototype.popPfx = function () {
+    }
+    popPfx() {
         return this.nsDecls.pop();
-    };
-    XMLEventHandler.prototype.clearPfx = function () {
+    }
+    clearPfx() {
         this.nsDecls = [];
-    };
-    XMLEventHandler.prototype.getPfx = function (namespace) {
-        var pfx = undefined;
+    }
+    getPfx(namespace) {
+        let pfx = undefined;
         if (namespace === undefined || namespace.length === 0) {
             // default
             pfx = "";
         }
         else {
             // check if declared already
-            for (var i = this.nsDecls.length - 1; i >= 0; i--) {
-                var pfxs = this.nsDecls[i];
-                for (var k = 0; k < pfxs.length; k++) {
-                    var pm = pfxs[k];
+            for (let i = this.nsDecls.length - 1; i >= 0; i--) {
+                let pfxs = this.nsDecls[i];
+                for (let k = 0; k < pfxs.length; k++) {
+                    let pm = pfxs[k];
                     if (pm.namespace == namespace) {
                         return pm.pfx;
                     }
@@ -1481,18 +1447,18 @@ var XMLEventHandler = /** @class */ (function (_super) {
             */
         }
         return pfx;
-    };
-    XMLEventHandler.prototype.getPfxLength = function () {
-        var n = 0;
-        for (var i = this.nsDecls.length - 1; i >= 0; i--) {
-            var pfxs = this.nsDecls[i];
+    }
+    getPfxLength() {
+        let n = 0;
+        for (let i = this.nsDecls.length - 1; i >= 0; i--) {
+            let pfxs = this.nsDecls[i];
             n += pfxs.length;
         }
         return n;
-    };
-    XMLEventHandler.prototype.getXML = function () {
+    }
+    getXML() {
         return this.xml;
-    };
+    }
     /*
     getPrefix(namespace : string) : string {
         // TODO more accurate namespace/prefix handling
@@ -1515,15 +1481,15 @@ var XMLEventHandler = /** @class */ (function (_super) {
         return pfx;
     }
     */
-    XMLEventHandler.prototype.startDocument = function () {
+    startDocument() {
         this.xml = "";
         this.xmlDecls = [undefined, undefined]; // {"cnt": 0, "decls": {}};
         this.clearPfx();
         this.seOpen = false;
-    };
-    XMLEventHandler.prototype.endDocument = function () {
-    };
-    XMLEventHandler.prototype.startElement = function (namespace, localName) {
+    }
+    endDocument() {
+    }
+    startElement(namespace, localName) {
         this.pushPfx();
         if (this.seOpen) {
             this.xml += ">";
@@ -1531,8 +1497,8 @@ var XMLEventHandler = /** @class */ (function (_super) {
         // old version
         // var pfx = this.getPrefix(namespace);
         // new version
-        var printNS = false;
-        var pfx = this.getPfx(namespace);
+        let printNS = false;
+        let pfx = this.getPfx(namespace);
         if (pfx == undefined) {
             pfx = this.addPfx(namespace);
             printNS = true;
@@ -1547,8 +1513,8 @@ var XMLEventHandler = /** @class */ (function (_super) {
         if (pfx.length > 0 && printNS) {
             this.xml += " xmlns:" + pfx + "='" + namespace + "'";
         }
-    };
-    XMLEventHandler.prototype.endElement = function (namespace, localName) {
+    }
+    endElement(namespace, localName) {
         if (this.seOpen) {
             this.xml += ">";
             this.seOpen = false;
@@ -1562,26 +1528,25 @@ var XMLEventHandler = /** @class */ (function (_super) {
             this.xml += "</" + localName + ">";
         }
         this.popPfx();
-    };
-    XMLEventHandler.prototype.characters = function (chars) {
+    }
+    characters(chars) {
         if (this.seOpen) {
             this.xml += ">";
             this.seOpen = false;
         }
         this.xml += chars;
-    };
-    XMLEventHandler.prototype.attribute = function (namespace, localName, value) {
+    }
+    attribute(namespace, localName, value) {
         this.xml += " " + localName + "=\"" + value + "\"";
-    };
-    return XMLEventHandler;
-}(EventHandler));
+    }
+}
 /*******************************************************************************
  *
  * E N C O D E R - P A R T
  *
  ******************************************************************************/
-var BitOutputStream = /** @class */ (function () {
-    function BitOutputStream() {
+export class BitOutputStream {
+    constructor() {
         /** array buffer */
         this.uint8Array = new Uint8Array(8); // initial size
         /** Current byte buffer */
@@ -1594,28 +1559,28 @@ var BitOutputStream = /** @class */ (function () {
         this.errn = 0;
     }
     /* internal: increases buffer if array is not sufficient anymore */
-    BitOutputStream.prototype.checkBuffer = function () {
+    checkBuffer() {
         if (this.len >= this.uint8Array.length) {
             // double size
-            var uint8ArrayNew = new Uint8Array(this.uint8Array.length * 2);
+            let uint8ArrayNew = new Uint8Array(this.uint8Array.length * 2);
             // copy (TODO is there a better way?)
             for (var i = 0; i < this.uint8Array.length; i++) {
                 uint8ArrayNew[i] = this.uint8Array[i];
             }
             this.uint8Array = uint8ArrayNew;
         }
-    };
-    BitOutputStream.prototype.getUint8Array = function () {
+    }
+    getUint8Array() {
         return this.uint8Array;
-    };
-    BitOutputStream.prototype.getUint8ArrayLength = function () {
+    }
+    getUint8ArrayLength() {
         return this.len;
-    };
+    }
     /**
      * If there are some unwritten bits, pad them if necessary and write them
      * out.
      */
-    BitOutputStream.prototype.align = function () {
+    align() {
         if (this.capacity < 8) {
             this.checkBuffer();
             this.uint8Array[this.len] = this.buffer << this.capacity;
@@ -1623,12 +1588,12 @@ var BitOutputStream = /** @class */ (function () {
             this.buffer = 0;
             this.len++;
         }
-    };
+    }
     /**
      * Encode n-bit unsigned integer. The n least significant bits of parameter
      * b starting with the most significant, i.e. from left to right.
      */
-    BitOutputStream.prototype.encodeNBitUnsignedInteger = function (b, n, byteAligned) {
+    encodeNBitUnsignedInteger(b, n, byteAligned) {
         if (byteAligned !== undefined && byteAligned) {
             while (n % 8 !== 0) {
                 n++;
@@ -1700,7 +1665,7 @@ var BitOutputStream = /** @class */ (function () {
                 this.capacity = 8 - n;
             }
         }
-    };
+    }
     /**
      * Returns the least number of 7 bit-blocks that is needed to represent the
      * int <param>n</param>. Returns 1 if <param>n</param> is 0.
@@ -1709,48 +1674,57 @@ var BitOutputStream = /** @class */ (function () {
      *            integer value
      *
      */
-    BitOutputStream.prototype.numberOf7BitBlocksToRepresent = function (n) {
+    numberOf7BitBlocksToRepresent(n) {
         /* assert (n >= 0); */
         /* 7 bits */
         if (n < 128) {
             return 1;
         }
+        /* 14 bits */
         else if (n < 16384) {
             return 2;
         }
+        /* 21 bits */
         else if (n < 2097152) {
             return 3;
         }
+        /* 28 bits */
         else if (n < 268435456) {
             return 4;
         }
+        /* 35 bits */
         else if (n < 0x800000000) {
             return 5;
         }
+        /* 42 bits */
         else if (n < 0x40000000000) {
             return 6;
         }
+        /* 49 bits */
         else if (n < 0x2000000000000) {
             return 7;
         }
+        /* 56 bits */
         else if (n < 0x100000000000000) {
             return 8;
         }
+        /* 63 bits */
         else if (n < 0x8000000000000000) {
             return 9;
         }
+        /* 70 bits */
         else {
             // long, 64 bits
             return 10;
         }
-    };
-    BitOutputStream.prototype.shiftRight = function (n, bits) {
-        for (var i = 0; i < bits; i++) {
+    }
+    shiftRight(n, bits) {
+        for (let i = 0; i < bits; i++) {
             n /= 2;
         }
         n = Math.floor(n);
         return n;
-    };
+    }
     /**
      * Encode an arbitrary precision non negative integer using a sequence of
      * octets. The most significant bit of the last octet is set to zero to
@@ -1758,7 +1732,7 @@ var BitOutputStream = /** @class */ (function () {
      * store the integer's value.
      */
     // Note: JavaScript shift operator works till 32 bits only!!
-    BitOutputStream.prototype.encodeUnsignedInteger = function (n, byteAligned) {
+    encodeUnsignedInteger(n, byteAligned) {
         if (n < 128) {
             // write value as is
             this.encodeNBitUnsignedInteger(n, 8, byteAligned);
@@ -1804,14 +1778,14 @@ var BitOutputStream = /** @class */ (function () {
                     this.encodeNBitUnsignedInteger(0 | n, 8, byteAligned);
             }
         }
-    };
+    }
     /**
      * Encode an arbitrary precision integer using a sign bit followed by a
      * sequence of octets. The most significant bit of the last octet is set to
      * zero to indicate sequence termination. Only seven bits per octet are used
      * to store the integer's value.
      */
-    BitOutputStream.prototype.encodeInteger = function (n, byteAligned) {
+    encodeInteger(n, byteAligned) {
         // signalize sign
         if (n < 0) {
             this.encodeNBitUnsignedInteger(1, 1, byteAligned);
@@ -1823,48 +1797,43 @@ var BitOutputStream = /** @class */ (function () {
             this.encodeNBitUnsignedInteger(0, 1, byteAligned);
             this.encodeUnsignedInteger(n, byteAligned);
         }
-    };
+    }
     /**
      * Encode a string as a sequence of codepoints, each of which is encoded as
      * an unsigned integer.
      */
-    BitOutputStream.prototype.encodeStringOnly = function (str, byteAligned) {
+    encodeStringOnly(str, byteAligned) {
         // str.charCodeAt(0); // Return the Unicode of character in a string
         for (var i = 0; i < str.length; i++) {
             var cp = str.charCodeAt(i);
             this.encodeUnsignedInteger(cp, byteAligned);
             console.log("char encoded " + cp);
         }
-    };
-    return BitOutputStream;
-}());
-var ElementContextEntry = /** @class */ (function () {
-    function ElementContextEntry(namespaceID, localNameID, grammar) {
+    }
+}
+class ElementContextEntry {
+    constructor(namespaceID, localNameID, grammar) {
         this.namespaceID = namespaceID;
         this.localNameID = localNameID;
         this.grammar = grammar;
     }
-    return ElementContextEntry;
-}());
-var EXIFloat = /** @class */ (function () {
-    function EXIFloat() {
+}
+class EXIFloat {
+    constructor() {
         this.exponent = 0;
         this.mantissa = 0;
     }
-    return EXIFloat;
-}());
+}
 ;
-var DateTimeValue = /** @class */ (function () {
-    function DateTimeValue() {
+class DateTimeValue {
+    constructor() {
         this.error = 0;
     }
-    return DateTimeValue;
-}());
+}
 // export
-var EXIEncoder = /** @class */ (function (_super) {
-    __extends(EXIEncoder, _super);
-    function EXIEncoder(grammars, options) {
-        return _super.call(this, grammars, options) || this;
+export class EXIEncoder extends AbtractEXICoder {
+    constructor(grammars, options) {
+        super(grammars, options);
     }
     // 	/*
     // 	 * should allow parsing XML string into an XML document in all major
@@ -1898,13 +1867,13 @@ var EXIEncoder = /** @class */ (function (_super) {
     // 	}
     // 	this.encodeXmlDocument(xmlDoc);
     // }
-    EXIEncoder.prototype.encodeXmlDocument = function (xmlDoc) {
+    encodeXmlDocument(xmlDoc) {
         this.startDocument();
         // documentElement always represents the root node
         this.processXMLElement(xmlDoc.documentElement);
         this.endDocument();
-    };
-    EXIEncoder.prototype.encodeHeader = function () {
+    }
+    encodeHeader() {
         // TODO cookie
         // Distinguishing Bits 10
         this.bitStream.encodeNBitUnsignedInteger(2, 2, false);
@@ -1914,15 +1883,15 @@ var EXIEncoder = /** @class */ (function (_super) {
         this.bitStream.encodeNBitUnsignedInteger(0, 1, false); // preview false
         this.bitStream.encodeNBitUnsignedInteger(0, 4, false);
         return 0;
-    };
-    EXIEncoder.prototype.processXMLElement = function (el) {
+    }
+    processXMLElement(el) {
         // console.log("SE " + el.nodeName);
         this.startElement(el.namespaceURI, el.localName);
         if (el.attributes != null && el.attributes.length > 0) {
             if (el.attributes.length > 1) {
                 if (this.grammars.isSchemaLess != undefined && this.grammars.isSchemaLess) {
                     console.log("Do not sort attributes in schema-less mode");
-                    for (var i = 0; i < el.attributes.length; i++) {
+                    for (let i = 0; i < el.attributes.length; i++) {
                         var ati = el.attributes.item(i);
                         this.attribute(ati.namespaceURI, ati.localName, ati.nodeValue);
                     }
@@ -1930,19 +1899,19 @@ var EXIEncoder = /** @class */ (function (_super) {
                 else {
                     // sorting
                     console.log("Sort attributes in schema-informed mode");
-                    var atts = [];
-                    for (var i = 0; i < el.attributes.length; i++) {
+                    let atts = [];
+                    for (let i = 0; i < el.attributes.length; i++) {
                         // console.log(" AT " + el.attributes[i].nodeName + " == " +
                         // el.attributes[i].nodeValue);
-                        var at = el.attributes.item(i);
+                        let at = el.attributes.item(i);
                         atts.push(at.localName);
                     }
                     // sort according localName
                     // TODO in case also for namespace URI
                     atts.sort();
                     // write in sorted order
-                    for (var i = 0; i < atts.length; i++) {
-                        var at = el.getAttributeNode(atts[i]);
+                    for (let i = 0; i < atts.length; i++) {
+                        let at = el.getAttributeNode(atts[i]);
                         if (at != null) {
                             this.attribute(at.namespaceURI, at.localName, at.nodeValue);
                         }
@@ -1962,15 +1931,15 @@ var EXIEncoder = /** @class */ (function (_super) {
                 this.attribute(at1.namespaceURI, at1.localName, at1.nodeValue);
             }
         }
-        var childNodes = el.childNodes;
+        let childNodes = el.childNodes;
         if (childNodes != null) {
             // console.log("\tchildNodes.length" + childNodes.length);
-            for (var i = 0; i < childNodes.length; i++) {
+            for (let i = 0; i < childNodes.length; i++) {
                 // Attributes (type 1)
                 // Text (type 3)
-                var cn = childNodes.item(i);
+                let cn = childNodes.item(i);
                 if (cn.nodeType === 3) {
-                    var text = cn.nodeValue;
+                    let text = cn.nodeValue;
                     text = text.trim();
                     if (text.length > 0) {
                         // console.log(" Text '" + text + "'");
@@ -1986,14 +1955,14 @@ var EXIEncoder = /** @class */ (function (_super) {
         }
         // console.log("EE " + el.nodeName);
         this.endElement();
-    };
-    EXIEncoder.prototype.getUint8Array = function () {
+    }
+    getUint8Array() {
         return this.bitStream.getUint8Array();
-    };
-    EXIEncoder.prototype.getUint8ArrayLength = function () {
+    }
+    getUint8ArrayLength() {
         return this.bitStream.getUint8ArrayLength();
-    };
-    EXIEncoder.prototype.startDocument = function () {
+    }
+    startDocument() {
         this.init();
         this.bitStream = new BitOutputStream();
         this.elementContext = [];
@@ -2007,9 +1976,9 @@ var EXIEncoder = /** @class */ (function (_super) {
             + this.grammars.grs.grammar.length);
         console.log("\t" + "Document grammar ID: "
             + this.grammars.grs.documentGrammarID);
-        var docGr = this.getGrammar(this.grammars.grs.documentGrammarID);
-        var ec = -1;
-        var prod;
+        let docGr = this.getGrammar(this.grammars.grs.documentGrammarID);
+        let ec = -1;
+        let prod;
         for (var i = 0; ec === -1 && i < docGr.production.length; i++) {
             prod = docGr.production[i];
             // if (prod.event === EventType["startDocument"] ) {
@@ -2024,17 +1993,17 @@ var EXIEncoder = /** @class */ (function (_super) {
             // console.log("\t" + "Event Code == " + ec );
             var codeLength = this.getCodeLengthForGrammar(docGr);
             this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
-            var nextGrammar = this.getGrammar(prod.nextGrammarID);
+            let nextGrammar = this.getGrammar(prod.nextGrammarID);
             this.elementContext.push(new ElementContextEntry(-1, -1, nextGrammar));
         }
         else {
             throw new Error("No startDocument event found");
         }
-    };
-    EXIEncoder.prototype.endDocument = function () {
-        var ec = -1;
-        var prod;
-        var grammar = this.elementContext[this.elementContext.length - 1].grammar;
+    }
+    endDocument() {
+        let ec = -1;
+        let prod;
+        let grammar = this.elementContext[this.elementContext.length - 1].grammar;
         for (var i = 0; ec === -1 && i < grammar.production.length; i++) {
             prod = grammar.production[i];
             if (prod.event === EventType.endDocument) {
@@ -2043,7 +2012,7 @@ var EXIEncoder = /** @class */ (function (_super) {
         }
         if (ec != -1) {
             // console.log("\t" + "Event Code == " + ec );
-            var codeLength = this.getCodeLengthForGrammar(grammar);
+            let codeLength = this.getCodeLengthForGrammar(grammar);
             this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
             // pop element stack
             this.elementContext.pop();
@@ -2057,21 +2026,21 @@ var EXIEncoder = /** @class */ (function (_super) {
         this.bitStream.align();
         console.log("numberOfQNames ED: " + this.getNumberOfQNames(this.grammars));
         // console.log("Grammar ED: " + JSON.stringify(this.grammars));
-    };
-    EXIEncoder.prototype.startElement = function (namespace, localName) {
+    }
+    startElement(namespace, localName) {
         if (namespace === null) {
             namespace = "";
         }
         console.log("SE {" + namespace + "}" + localName);
-        var isSE = false;
-        var isSE_NS = false;
-        var isSE_GENERIC = false;
-        var namespaceContext;
-        var ec = -1;
-        var prod;
-        var grammar = this.elementContext[this.elementContext.length - 1].grammar;
-        var qnameContext;
-        for (var i = 0; ec === -1 && i < grammar.production.length; i++) {
+        let isSE = false;
+        let isSE_NS = false;
+        let isSE_GENERIC = false;
+        let namespaceContext;
+        let ec = -1;
+        let prod;
+        let grammar = this.elementContext[this.elementContext.length - 1].grammar;
+        let qnameContext;
+        for (let i = 0; ec === -1 && i < grammar.production.length; i++) {
             prod = grammar.production[i];
             // console.log("\t" + "Prod " + i + prod.event);
             if (prod.event === EventType.startElement) {
@@ -2097,10 +2066,10 @@ var EXIEncoder = /** @class */ (function (_super) {
         if (ec != -1) {
             // event-code found
             // console.log("\t" + "Event Code == " + ec );
-            var codeLength = this.getCodeLengthForGrammar(grammar);
+            let codeLength = this.getCodeLengthForGrammar(grammar);
             this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
             console.log("SE encoded " + ec + " in " + codeLength);
-            var startElementGrammar = void 0;
+            let startElementGrammar;
             if (isSE || isSE_NS || isSE_GENERIC) {
                 // ok
                 // } else if (isSE_GENERIC) {
@@ -2110,7 +2079,7 @@ var EXIEncoder = /** @class */ (function (_super) {
                 throw new Error("No startElement event found for " + localName);
             }
             // update current element context
-            var nextGrammar = this.getGrammar(prod.nextGrammarID);
+            let nextGrammar = this.getGrammar(prod.nextGrammarID);
             this.elementContext[this.elementContext.length - 1].grammar = nextGrammar;
             console.log("NextGrammar after SE/SE_NS " + localName + " is " + nextGrammar);
             // push new element context
@@ -2139,24 +2108,24 @@ var EXIEncoder = /** @class */ (function (_super) {
             // NO event-code found
             if (grammar.type === GrammarType.builtInStartTagContent || grammar.type === GrammarType.builtInElementContent) {
                 // 1st level
-                var codeLength1 = this.getCodeLengthForGrammar(grammar);
+                let codeLength1 = this.getCodeLengthForGrammar(grammar);
                 this.bitStream.encodeNBitUnsignedInteger(grammar.production.length, codeLength1, this.isByteAligned);
                 console.log("SE1 encoded " + grammar.production.length + " in " + codeLength1);
                 // 2nd level
-                var codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
-                var ec2 = this.get2ndEventCode(grammar, EventType.startElementGeneric);
+                let codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
+                let ec2 = this.get2ndEventCode(grammar, EventType.startElementGeneric);
                 this.bitStream.encodeNBitUnsignedInteger(ec2, codeLength2, this.isByteAligned); //2 in 2 bits
                 console.log("SE2 encoded " + ec2 + " in " + codeLength2);
                 // encode qname
-                var qnameContext_1 = this.encodeQName(namespace, localName);
+                let qnameContext = this.encodeQName(namespace, localName);
                 console.log("SE qname encoded");
-                var startElementGrammar = this.getGlobalStartElement(qnameContext_1);
+                let startElementGrammar = this.getGlobalStartElement(qnameContext);
                 // learn SE
-                this.learnStartElement(grammar, startElementGrammar.grammarID, qnameContext_1);
+                this.learnStartElement(grammar, startElementGrammar.grammarID, qnameContext);
                 // update current element context
                 this.elementContext[this.elementContext.length - 1].grammar = grammar.elementContent;
                 console.log("NextGrammar after SE_Generic_Undefined " + localName + " is " + this.elementContext[this.elementContext.length - 1].grammar);
-                this.elementContext.push(new ElementContextEntry(qnameContext_1.uriID, qnameContext_1.localNameID, startElementGrammar));
+                this.elementContext.push(new ElementContextEntry(qnameContext.uriID, qnameContext.localNameID, startElementGrammar));
                 // } else if(grammar.type === GrammarType.builtInElementContent) {
                 // 	throw new Error("TODO SE elementContent grammar. grammar.type = " + grammar.type);
             }
@@ -2164,14 +2133,14 @@ var EXIEncoder = /** @class */ (function (_super) {
                 throw new Error("No startElement event found for " + localName + ". grammar.type = " + grammar.type);
             }
         }
-    };
-    EXIEncoder.prototype.encodeQName = function (namespace, localName) {
-        var namespaceContext = this.encodeUri(namespace);
+    }
+    encodeQName(namespace, localName) {
+        let namespaceContext = this.encodeUri(namespace);
         return this.encodeLocalName(namespaceContext, localName);
-    };
-    EXIEncoder.prototype.encodeUri = function (namespace) {
-        var n = this.getCodeLength(this.grammars.qnames.namespaceContext.length + 1); // numberEntries+1
-        var namespaceContext = this.getUri(namespace);
+    }
+    encodeUri(namespace) {
+        let n = this.getCodeLength(this.grammars.qnames.namespaceContext.length + 1); // numberEntries+1
+        let namespaceContext = this.getUri(namespace);
         if (namespaceContext === undefined) {
             // uri string value was not found
             // ==> zero (0) as an n-nit unsigned integer
@@ -2193,9 +2162,9 @@ var EXIEncoder = /** @class */ (function (_super) {
             console.log("Uri hit encoded " + (namespaceContext.uriID + 1) + " in " + n);
         }
         return namespaceContext;
-    };
-    EXIEncoder.prototype.encodeLocalName = function (namespaceContext, localName) {
-        var qnameContext = this.getQNameContext(namespaceContext, localName);
+    }
+    encodeLocalName(namespaceContext, localName) {
+        let qnameContext = this.getQNameContext(namespaceContext, localName);
         if (qnameContext === undefined) {
             // string value was not found in local partition
             // ==> string literal is encoded as a String
@@ -2216,13 +2185,13 @@ var EXIEncoder = /** @class */ (function (_super) {
             console.log("create new runtime qnameContext for '" + localName + "', uriId=" + qnameContext.uriID + " and localNameID=" + qnameContext.localNameID);
             // this.runtimeQNameContexts.push(qnameContext);
             // NOTE: Java Nahsorn seems to add an "undefined" entry up-front!?
-            var qnameContextLengthBefore = namespaceContext.qnameContext.length;
+            let qnameContextLengthBefore = namespaceContext.qnameContext.length;
             // console.log("QName length before: " + qnameContextLengthBefore)
             if (qnameContextLengthBefore == 0) {
                 namespaceContext.qnameContext = new Array();
             }
             namespaceContext.qnameContext.push(qnameContext);
-            for (var i = 0; i < namespaceContext.qnameContext.length; i++) {
+            for (let i = 0; i < namespaceContext.qnameContext.length; i++) {
                 console.log("\t" + i + "\t" + namespaceContext.qnameContext[i].localName);
             }
             // console.log("QName length after: " + namespaceContext.qnameContext.length);
@@ -2240,13 +2209,13 @@ var EXIEncoder = /** @class */ (function (_super) {
             console.log("localName hit2 encoded " + qnameContext.localNameID + " in " + n);
         }
         return qnameContext;
-    };
-    EXIEncoder.prototype.endElement = function () {
+    }
+    endElement() {
         console.log("EE");
-        var ec = -1;
-        var prod;
-        var grammar = this.elementContext[this.elementContext.length - 1].grammar;
-        for (var i = 0; ec === -1 && i < grammar.production.length; i++) {
+        let ec = -1;
+        let prod;
+        let grammar = this.elementContext[this.elementContext.length - 1].grammar;
+        for (let i = 0; ec === -1 && i < grammar.production.length; i++) {
             prod = grammar.production[i];
             if (prod.event === EventType.endElement) {
                 ec = i;
@@ -2254,7 +2223,7 @@ var EXIEncoder = /** @class */ (function (_super) {
         }
         if (ec != -1) {
             // console.log("\t" + "Event Code == " + ec );
-            var codeLength = this.getCodeLengthForGrammar(grammar);
+            let codeLength = this.getCodeLengthForGrammar(grammar);
             this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
             console.log("EE encoded " + ec + " in " + codeLength);
             // pop element stack
@@ -2263,12 +2232,12 @@ var EXIEncoder = /** @class */ (function (_super) {
         else {
             if (grammar.type === GrammarType.builtInStartTagContent || grammar.type === GrammarType.builtInElementContent) {
                 // 1st level
-                var codeLength1 = this.getCodeLengthForGrammar(grammar);
+                let codeLength1 = this.getCodeLengthForGrammar(grammar);
                 this.bitStream.encodeNBitUnsignedInteger(grammar.production.length, codeLength1, this.isByteAligned);
                 console.log("EE1 encoded " + grammar.production.length + " in " + codeLength1);
                 // 2nd level
-                var codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
-                var ec2 = this.get2ndEventCode(grammar, EventType.endElementGeneric);
+                let codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
+                let ec2 = this.get2ndEventCode(grammar, EventType.endElementGeneric);
                 this.bitStream.encodeNBitUnsignedInteger(ec2, codeLength2, this.isByteAligned);
                 console.log("EE2 encoded " + ec2 + " in " + codeLength2);
                 // learn EE
@@ -2280,8 +2249,8 @@ var EXIEncoder = /** @class */ (function (_super) {
                 throw new Error("No endElement event found");
             }
         }
-    };
-    EXIEncoder.prototype.attribute = function (namespace, localName, value) {
+    }
+    attribute(namespace, localName, value) {
         if (namespace === null) {
             namespace = "";
         }
@@ -2295,9 +2264,9 @@ var EXIEncoder = /** @class */ (function (_super) {
         }
         else {
             // normal attribute
-            var ec = -1;
-            var prod = void 0;
-            var grammar = this.elementContext[this.elementContext.length - 1].grammar;
+            let ec = -1;
+            let prod;
+            let grammar = this.elementContext[this.elementContext.length - 1].grammar;
             for (var i = 0; ec === -1 && i < grammar.production.length; i++) {
                 prod = grammar.production[i];
                 if (prod.event === EventType.attribute) {
@@ -2310,10 +2279,10 @@ var EXIEncoder = /** @class */ (function (_super) {
             }
             if (ec != -1) {
                 // console.log("\t" + "Event Code == " + ec );
-                var codeLength = this.getCodeLengthForGrammar(grammar);
+                let codeLength = this.getCodeLengthForGrammar(grammar);
                 this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
                 // write value
-                var datatype = void 0;
+                let datatype;
                 if (prod.attributeDatatypeID === undefined || prod.attributeDatatypeID < 0) {
                     // learned AT
                     datatype = EXIEncoder.DEFAULT_SIMPLE_DATATYPE;
@@ -2323,22 +2292,22 @@ var EXIEncoder = /** @class */ (function (_super) {
                 }
                 this.encodeDatatypeValue(value, datatype, prod.attributeNamespaceID, prod.attributeLocalNameID);
                 // update current element context with revised grammar
-                var nextGrammar = this.getGrammar(prod.nextGrammarID);
+                let nextGrammar = this.getGrammar(prod.nextGrammarID);
                 this.elementContext[this.elementContext.length - 1].grammar = nextGrammar;
             }
             else {
                 if (grammar.type === GrammarType.builtInStartTagContent || grammar.type === GrammarType.builtInElementContent) {
                     // 1st level
-                    var codeLength1 = this.getCodeLengthForGrammar(grammar);
+                    let codeLength1 = this.getCodeLengthForGrammar(grammar);
                     this.bitStream.encodeNBitUnsignedInteger(grammar.production.length, codeLength1, this.isByteAligned);
                     // 2nd level
-                    var codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
-                    var ec2 = this.get2ndEventCode(grammar, EventType.attributeGeneric);
+                    let codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
+                    let ec2 = this.get2ndEventCode(grammar, EventType.attributeGeneric);
                     this.bitStream.encodeNBitUnsignedInteger(ec2, codeLength2, this.isByteAligned);
                     // encode qname
-                    var qnAT = this.encodeQName(namespace, localName);
+                    let qnAT = this.encodeQName(namespace, localName);
                     // encode value
-                    var elementContext = this.elementContext[this.elementContext.length - 1];
+                    let elementContext = this.elementContext[this.elementContext.length - 1];
                     this.encodeDatatypeValue(value, EXIEncoder.DEFAULT_SIMPLE_DATATYPE, qnAT.uriID, qnAT.localNameID);
                     // learn AT
                     this.learnAttribute(grammar, qnAT);
@@ -2348,12 +2317,12 @@ var EXIEncoder = /** @class */ (function (_super) {
                 }
             }
         }
-    };
-    EXIEncoder.prototype.characters = function (chars) {
+    }
+    characters(chars) {
         console.log("\tCharacters '" + chars + "'");
-        var ec = -1;
-        var prod;
-        var grammar = this.elementContext[this.elementContext.length - 1].grammar;
+        let ec = -1;
+        let prod;
+        let grammar = this.elementContext[this.elementContext.length - 1].grammar;
         for (var i = 0; ec === -1 && i < grammar.production.length; i++) {
             prod = grammar.production[i];
             if (prod.event === EventType.characters) {
@@ -2362,10 +2331,10 @@ var EXIEncoder = /** @class */ (function (_super) {
         }
         if (ec != -1) {
             // console.log("\t" + "Event Code == " + ec );
-            var codeLength = this.getCodeLengthForGrammar(grammar);
+            let codeLength = this.getCodeLengthForGrammar(grammar);
             this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
             // write value
-            var datatype = void 0;
+            let datatype;
             if (prod.charactersDatatypeID === undefined || prod.charactersDatatypeID < 0) {
                 // learned CH
                 datatype = EXIEncoder.DEFAULT_SIMPLE_DATATYPE;
@@ -2373,23 +2342,23 @@ var EXIEncoder = /** @class */ (function (_super) {
             else {
                 datatype = this.grammars.simpleDatatypes[prod.charactersDatatypeID];
             }
-            var elementContext = this.elementContext[this.elementContext.length - 1];
+            let elementContext = this.elementContext[this.elementContext.length - 1];
             this.encodeDatatypeValue(chars, datatype, elementContext.namespaceID, elementContext.localNameID);
             // update current element context with revised grammar
-            var nextGrammar = this.getGrammar(prod.nextGrammarID);
+            let nextGrammar = this.getGrammar(prod.nextGrammarID);
             this.elementContext[this.elementContext.length - 1].grammar = nextGrammar;
         }
         else {
             if (grammar.type === GrammarType.builtInStartTagContent || grammar.type === GrammarType.builtInElementContent) {
                 // 1st level
-                var codeLength1 = this.getCodeLengthForGrammar(grammar);
+                let codeLength1 = this.getCodeLengthForGrammar(grammar);
                 this.bitStream.encodeNBitUnsignedInteger(grammar.production.length, codeLength1, this.isByteAligned);
                 // 2nd level
-                var codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
-                var ec2 = this.get2ndEventCode(grammar, EventType.charactersGeneric);
+                let codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
+                let ec2 = this.get2ndEventCode(grammar, EventType.charactersGeneric);
                 this.bitStream.encodeNBitUnsignedInteger(ec2, codeLength2, this.isByteAligned);
                 // write value
-                var elementContext = this.elementContext[this.elementContext.length - 1];
+                let elementContext = this.elementContext[this.elementContext.length - 1];
                 this.encodeDatatypeValue(chars, EXIEncoder.DEFAULT_SIMPLE_DATATYPE, elementContext.namespaceID, elementContext.localNameID);
                 // learn CH
                 this.learnCharacters(grammar);
@@ -2400,8 +2369,8 @@ var EXIEncoder = /** @class */ (function (_super) {
                 throw new Error("No characters event found for '" + chars + "'");
             }
         }
-    };
-    EXIEncoder.prototype.decimalPlaces = function (num) {
+    }
+    decimalPlaces(num) {
         var match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
         if (!match) {
             return 0;
@@ -2411,19 +2380,19 @@ var EXIEncoder = /** @class */ (function (_super) {
         (match[1] ? match[1].length : 0)
             // Adjust for scientific notation.
             - (match[2] ? +match[2] : 0));
-    };
-    EXIEncoder.prototype.isInteger = function (value) {
+    }
+    isInteger(value) {
         return typeof value === "number" &&
             isFinite(value) &&
             Math.floor(value) === value;
-    };
+    }
     ;
     // inspired by https://blog.coolmuse.com/2012/06/21/getting-the-exponent-and-mantissa-from-a-javascript-number/
-    EXIEncoder.prototype.getEXIFloat = function (value) {
+    getEXIFloat(value) {
         if (typeof value !== "number") {
             throw new TypeError("value must be a Number");
         }
-        var result = new EXIFloat();
+        let result = new EXIFloat();
         if (value === 0) {
             return result;
         }
@@ -2474,13 +2443,13 @@ var EXIEncoder = /** @class */ (function (_super) {
             result.mantissa = -result.mantissa;
         }
         return result;
-    };
+    }
     /*
     function equalFloat(f1, f2) {
         return ((f1 > f2 ? f1 - f2 : f2 - f1) < (1e-4));
     }
     */
-    EXIEncoder.prototype.parseYear = function (sb, dateTimeValue) {
+    parseYear(sb, dateTimeValue) {
         var sYear;
         var len;
         if (sb.charAt(0) === '-') {
@@ -2494,7 +2463,7 @@ var EXIEncoder = /** @class */ (function (_super) {
         var year = parseInt(sYear);
         dateTimeValue.year = year;
         return len;
-    };
+    }
     /*
      * function parseMonth(sb, pos, dateTimeValue) { var month =
      * parseInt(sb.substring(pos, pos+2)); // adjust buffer // sb.delete(0, 2);
@@ -2506,7 +2475,7 @@ var EXIEncoder = /** @class */ (function (_super) {
      * function parseDay(sb, pos) { var sDay = sb.substring(pos, pos+2); var day =
      * parseInt(sDay); return (pos+2); }
      */
-    EXIEncoder.prototype.checkCharacter = function (sb, pos, c, dateTimeValue) {
+    checkCharacter(sb, pos, c, dateTimeValue) {
         if (sb.length > pos && sb.charAt(pos) === c) {
             // ok
         }
@@ -2514,8 +2483,8 @@ var EXIEncoder = /** @class */ (function (_super) {
             dateTimeValue.error = -1;
         }
         return (pos + 1);
-    };
-    EXIEncoder.prototype.parseMonthDay = function (sb, pos, dateTimeValue) {
+    }
+    parseMonthDay(sb, pos, dateTimeValue) {
         // pos = parseMonth(sb, pos, dateTimeValue); // month
         var month = parseInt(sb.substring(pos, pos + 2));
         pos += 2;
@@ -2526,8 +2495,8 @@ var EXIEncoder = /** @class */ (function (_super) {
         // MONTH_MULTIPLICATOR == 32
         dateTimeValue.monthDay = month * 32 + day;
         return pos;
-    };
-    EXIEncoder.prototype.encodeDatatypeValue = function (value, datatype, namespaceID, localNameID) {
+    }
+    encodeDatatypeValue(value, datatype, namespaceID, localNameID) {
         if (datatype.type === SimpleDatatypeType.STRING) {
             this.encodeDatatypeValueString(value, namespaceID, localNameID);
         }
@@ -2580,8 +2549,8 @@ var EXIEncoder = /** @class */ (function (_super) {
         else {
             throw new Error("Unsupported datatype: " + datatype.type + " for value " + value);
         }
-    };
-    EXIEncoder.prototype.encodeDatatypeValueString = function (value, namespaceID, localNameID) {
+    }
+    encodeDatatypeValueString(value, namespaceID, localNameID) {
         var stEntry = this.stringTable.getStringTableEntry(value);
         if (stEntry === null) {
             // miss
@@ -2609,16 +2578,16 @@ var EXIEncoder = /** @class */ (function (_super) {
                 this.bitStream.encodeNBitUnsignedInteger(stEntry.globalValueID, n, this.isByteAligned);
             }
         }
-    };
-    EXIEncoder.prototype.encodeDatatypeValueUnsignedInteger = function (value, namespaceID, localNameID) {
+    }
+    encodeDatatypeValueUnsignedInteger(value, namespaceID, localNameID) {
         console.log("\t" + " UNSIGNED_INTEGER = " + value);
         this.bitStream.encodeUnsignedInteger(parseInt(value), this.isByteAligned);
-    };
-    EXIEncoder.prototype.encodeDatatypeValueInteger = function (value, namespaceID, localNameID) {
+    }
+    encodeDatatypeValueInteger(value, namespaceID, localNameID) {
         console.log("\t" + " INTEGER = " + value);
         this.bitStream.encodeInteger(parseInt(value), this.isByteAligned);
-    };
-    EXIEncoder.prototype.encodeDatatypeValueFloat = function (value, namespaceID, localNameID) {
+    }
+    encodeDatatypeValueFloat(value, namespaceID, localNameID) {
         var f = parseFloat(value);
         // 
         console.log("\t" + " floatA = " + f);
@@ -2631,37 +2600,37 @@ var EXIEncoder = /** @class */ (function (_super) {
         console
             .log("\t" + " floatB = " + fl.mantissa + " E "
             + fl.exponent);
-    };
-    EXIEncoder.prototype.encodeDatatypeValueBoolean = function (value, namespaceID, localNameID) {
-        var b = (value == 'true');
-        if (b) {
+    }
+    encodeDatatypeValueBoolean(value, namespaceID, localNameID) {
+        let b = (value == 'true');
+        if (b) { // == "true" || value == "1"
             this.bitStream.encodeNBitUnsignedInteger(1, 1, this.isByteAligned);
         }
         else {
             this.bitStream.encodeNBitUnsignedInteger(0, 1, this.isByteAligned);
         }
-    };
-    EXIEncoder.prototype.encodeDatatypeValueEnumeration = function (value, enumValues, namespaceID, localNameID) {
-        var index;
+    }
+    encodeDatatypeValueEnumeration(value, enumValues, namespaceID, localNameID) {
+        let index;
         if (enumValues && (index = enumValues.indexOf(value)) >= 0) {
             this.bitStream.encodeNBitUnsignedInteger(index, this.getCodeLength(enumValues.length), this.isByteAligned);
         }
         else {
             throw new Error("Unsupported enum value: " + value + " for possible enum values " + enumValues);
         }
-    };
-    EXIEncoder.prototype.encodeDatatypeValueDateTime = function (value, datetimeType, namespaceID, localNameID) {
-        var year = 0, monthDay = 0, time = 0, fractionalSecs = 0;
-        var presenceFractionalSecs = false;
-        var presenceTimezone = false;
-        var sDatetime = "";
-        if (datetimeType === DatetimeType.date) {
+    }
+    encodeDatatypeValueDateTime(value, datetimeType, namespaceID, localNameID) {
+        let year = 0, monthDay = 0, time = 0, fractionalSecs = 0;
+        let presenceFractionalSecs = false;
+        let presenceTimezone = false;
+        let sDatetime = "";
+        if (datetimeType === DatetimeType.date) { // // date: Year, MonthDay,
             // [TimeZone]
             // YEAR_OFFSET = 2000
             // NUMBER_BITS_MONTHDAY = 9
             // MONTH_MULTIPLICATOR = 32
-            var dateTimeValue = new DateTimeValue();
-            var pos = this.parseYear(value, dateTimeValue);
+            let dateTimeValue = new DateTimeValue();
+            let pos = this.parseYear(value, dateTimeValue);
             pos = this.checkCharacter(value, pos, '-', dateTimeValue); // hyphen
             pos = this.parseMonthDay(value, pos, dateTimeValue);
             // TODO timezone
@@ -2681,9 +2650,8 @@ var EXIEncoder = /** @class */ (function (_super) {
         }
         // console.log("\t" + " presenceTimezone = " + presenceTimezone);
         console.log("\t" + " datetime = " + sDatetime);
-    };
-    return EXIEncoder;
-}(AbtractEXICoder));
+    }
+}
 /*******************************************************************************
  *
  * E X I 4 J S O N - P A R T
@@ -2691,30 +2659,27 @@ var EXIEncoder = /** @class */ (function (_super) {
  ******************************************************************************/
 // Note: The reason why it is all put together is to avoid export in TSC which
 // causes issue in the browser without using RequireJS or SystemJS 
-var exiForJsonUri = "http://www.w3.org/2015/EXI/json";
+const exiForJsonUri = "http://www.w3.org/2015/EXI/json";
 // see minified schema-for-json.xsd.grs with thing grammars
 // Note: the idea would be to have this optimized (currently all schema information, even unnecessary stuff is there...)
-var jsonGrammars = '{"qnames":{"namespaceContext":[{"uriID":0,"uri":"","qnameContext":[]},{"uriID":1,"uri":"http://www.w3.org/XML/1998/namespace","qnameContext":[{"uriID":1,"localNameID":0,"localName":"base"},{"uriID":1,"localNameID":1,"localName":"id"},{"uriID":1,"localNameID":2,"localName":"lang"},{"uriID":1,"localNameID":3,"localName":"space"}]},{"uriID":2,"uri":"http://www.w3.org/2001/XMLSchema-instance","qnameContext":[{"uriID":2,"localNameID":0,"localName":"nil"},{"uriID":2,"localNameID":1,"localName":"type"}]},{"uriID":3,"uri":"http://www.w3.org/2001/XMLSchema","qnameContext":[{"uriID":3,"localNameID":0,"localName":"ENTITIES","globalTypeGrammarID":18},{"uriID":3,"localNameID":1,"localName":"ENTITY","globalTypeGrammarID":7},{"uriID":3,"localNameID":2,"localName":"ID","globalTypeGrammarID":7},{"uriID":3,"localNameID":3,"localName":"IDREF","globalTypeGrammarID":7},{"uriID":3,"localNameID":4,"localName":"IDREFS","globalTypeGrammarID":18},{"uriID":3,"localNameID":5,"localName":"NCName","globalTypeGrammarID":7},{"uriID":3,"localNameID":6,"localName":"NMTOKEN","globalTypeGrammarID":7},{"uriID":3,"localNameID":7,"localName":"NMTOKENS","globalTypeGrammarID":18},{"uriID":3,"localNameID":8,"localName":"NOTATION","globalTypeGrammarID":7},{"uriID":3,"localNameID":9,"localName":"Name","globalTypeGrammarID":7},{"uriID":3,"localNameID":10,"localName":"QName","globalTypeGrammarID":7},{"uriID":3,"localNameID":11,"localName":"anySimpleType","globalTypeGrammarID":7},{"uriID":3,"localNameID":12,"localName":"anyType","globalTypeGrammarID":19},{"uriID":3,"localNameID":13,"localName":"anyURI","globalTypeGrammarID":7},{"uriID":3,"localNameID":14,"localName":"base64Binary","globalTypeGrammarID":12},{"uriID":3,"localNameID":15,"localName":"boolean","globalTypeGrammarID":9},{"uriID":3,"localNameID":16,"localName":"byte","globalTypeGrammarID":20},{"uriID":3,"localNameID":17,"localName":"date","globalTypeGrammarID":15},{"uriID":3,"localNameID":18,"localName":"dateTime","globalTypeGrammarID":13},{"uriID":3,"localNameID":19,"localName":"decimal","globalTypeGrammarID":17},{"uriID":3,"localNameID":20,"localName":"double","globalTypeGrammarID":8},{"uriID":3,"localNameID":21,"localName":"duration","globalTypeGrammarID":7},{"uriID":3,"localNameID":22,"localName":"float","globalTypeGrammarID":8},{"uriID":3,"localNameID":23,"localName":"gDay","globalTypeGrammarID":21},{"uriID":3,"localNameID":24,"localName":"gMonth","globalTypeGrammarID":22},{"uriID":3,"localNameID":25,"localName":"gMonthDay","globalTypeGrammarID":23},{"uriID":3,"localNameID":26,"localName":"gYear","globalTypeGrammarID":24},{"uriID":3,"localNameID":27,"localName":"gYearMonth","globalTypeGrammarID":25},{"uriID":3,"localNameID":28,"localName":"hexBinary","globalTypeGrammarID":26},{"uriID":3,"localNameID":29,"localName":"int","globalTypeGrammarID":16},{"uriID":3,"localNameID":30,"localName":"integer","globalTypeGrammarID":16},{"uriID":3,"localNameID":31,"localName":"language","globalTypeGrammarID":7},{"uriID":3,"localNameID":32,"localName":"long","globalTypeGrammarID":16},{"uriID":3,"localNameID":33,"localName":"negativeInteger","globalTypeGrammarID":16},{"uriID":3,"localNameID":34,"localName":"nonNegativeInteger","globalTypeGrammarID":27},{"uriID":3,"localNameID":35,"localName":"nonPositiveInteger","globalTypeGrammarID":16},{"uriID":3,"localNameID":36,"localName":"normalizedString","globalTypeGrammarID":7},{"uriID":3,"localNameID":37,"localName":"positiveInteger","globalTypeGrammarID":27},{"uriID":3,"localNameID":38,"localName":"short","globalTypeGrammarID":16},{"uriID":3,"localNameID":39,"localName":"string","globalTypeGrammarID":7},{"uriID":3,"localNameID":40,"localName":"time","globalTypeGrammarID":14},{"uriID":3,"localNameID":41,"localName":"token","globalTypeGrammarID":7},{"uriID":3,"localNameID":42,"localName":"unsignedByte","globalTypeGrammarID":28},{"uriID":3,"localNameID":43,"localName":"unsignedInt","globalTypeGrammarID":27},{"uriID":3,"localNameID":44,"localName":"unsignedLong","globalTypeGrammarID":27},{"uriID":3,"localNameID":45,"localName":"unsignedShort","globalTypeGrammarID":27}]},{"uriID":4,"uri":"http://www.w3.org/2015/EXI/json","qnameContext":[{"uriID":4,"localNameID":0,"localName":"array","globalElementGrammarID":5},{"uriID":4,"localNameID":1,"localName":"arrayType","globalTypeGrammarID":5},{"uriID":4,"localNameID":2,"localName":"base64Binary"},{"uriID":4,"localNameID":3,"localName":"boolean","globalElementGrammarID":9},{"uriID":4,"localNameID":4,"localName":"booleanType","globalTypeGrammarID":9},{"uriID":4,"localNameID":5,"localName":"date"},{"uriID":4,"localNameID":6,"localName":"dateTime"},{"uriID":4,"localNameID":7,"localName":"decimal"},{"uriID":4,"localNameID":8,"localName":"integer"},{"uriID":4,"localNameID":9,"localName":"map","globalElementGrammarID":6},{"uriID":4,"localNameID":10,"localName":"mapType","globalTypeGrammarID":6},{"uriID":4,"localNameID":11,"localName":"null","globalElementGrammarID":10},{"uriID":4,"localNameID":12,"localName":"nullType","globalTypeGrammarID":10},{"uriID":4,"localNameID":13,"localName":"number","globalElementGrammarID":8},{"uriID":4,"localNameID":14,"localName":"numberType","globalTypeGrammarID":8},{"uriID":4,"localNameID":15,"localName":"other","globalElementGrammarID":11},{"uriID":4,"localNameID":16,"localName":"otherType","globalTypeGrammarID":11},{"uriID":4,"localNameID":17,"localName":"string","globalElementGrammarID":7},{"uriID":4,"localNameID":18,"localName":"stringType","globalTypeGrammarID":7},{"uriID":4,"localNameID":19,"localName":"time"}]}]},"simpleDatatypes":[{"simpleDatatypeID":0,"type":"STRING"},{"simpleDatatypeID":1,"type":"STRING"},{"simpleDatatypeID":2,"type":"FLOAT"},{"simpleDatatypeID":3,"type":"FLOAT"},{"simpleDatatypeID":4,"type":"BOOLEAN"},{"simpleDatatypeID":5,"type":"BOOLEAN"},{"simpleDatatypeID":6,"type":"BINARY_BASE64"},{"simpleDatatypeID":7,"type":"DATETIME","datetimeType":"dateTime"},{"simpleDatatypeID":8,"type":"DATETIME","datetimeType":"time"},{"simpleDatatypeID":9,"type":"DATETIME","datetimeType":"date"},{"simpleDatatypeID":10,"type":"INTEGER"},{"simpleDatatypeID":11,"type":"DECIMAL"},{"simpleDatatypeID":12,"type":"LIST","listType":"STRING"},{"simpleDatatypeID":13,"type":"LIST","listType":"STRING"},{"simpleDatatypeID":14,"type":"NBIT_UNSIGNED_INTEGER","lowerBound":-128,"upperBound":127},{"simpleDatatypeID":15,"type":"INTEGER"},{"simpleDatatypeID":16,"type":"DATETIME","datetimeType":"gDay"},{"simpleDatatypeID":17,"type":"STRING"},{"simpleDatatypeID":18,"type":"DATETIME","datetimeType":"gMonth"},{"simpleDatatypeID":19,"type":"DATETIME","datetimeType":"gMonthDay"},{"simpleDatatypeID":20,"type":"DATETIME","datetimeType":"gYear"},{"simpleDatatypeID":21,"type":"DATETIME","datetimeType":"gYearMonth"},{"simpleDatatypeID":22,"type":"BINARY_HEX"},{"simpleDatatypeID":23,"type":"UNSIGNED_INTEGER"},{"simpleDatatypeID":24,"type":"NBIT_UNSIGNED_INTEGER","lowerBound":0,"upperBound":255},{"simpleDatatypeID":25,"type":"UNSIGNED_INTEGER"}],"grs":{"documentGrammarID":0,"fragmentGrammarID":3,"grammar":[{"grammarID":"0","type":"document","production":[{"event":"startDocument","nextGrammarID":1}]},{"grammarID":"1","type":"docContent","production":[{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":0,"startElementGrammarID":5,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":3,"startElementGrammarID":9,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":9,"startElementGrammarID":6,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":11,"startElementGrammarID":10,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":13,"startElementGrammarID":8,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":15,"startElementGrammarID":11,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":17,"startElementGrammarID":7,"nextGrammarID":2},{"event":"startElementGeneric","nextGrammarID":2}]},{"grammarID":"2","type":"docEnd","production":[{"event":"endDocument","nextGrammarID":-1}]},{"grammarID":"3","type":"fragment","production":[{"event":"startDocument","nextGrammarID":4}]},{"grammarID":"4","type":"fragmentContent","production":[{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":0,"startElementGrammarID":5,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":2,"startElementGrammarID":12,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":3,"startElementGrammarID":9,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":5,"startElementGrammarID":15,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":6,"startElementGrammarID":13,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":7,"startElementGrammarID":17,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":8,"startElementGrammarID":16,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":9,"startElementGrammarID":6,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":11,"startElementGrammarID":10,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":13,"startElementGrammarID":8,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":15,"startElementGrammarID":11,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":17,"startElementGrammarID":7,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":19,"startElementGrammarID":14,"nextGrammarID":4},{"event":"startElementGeneric","nextGrammarID":4},{"event":"endDocument","nextGrammarID":-1}]},{"grammarID":"5","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":9,"startElementGrammarID":6,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":0,"startElementGrammarID":5,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":17,"startElementGrammarID":7,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":13,"startElementGrammarID":8,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":3,"startElementGrammarID":9,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":11,"startElementGrammarID":10,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":15,"startElementGrammarID":11,"nextGrammarID":31},{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"6","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"startElementNS","startElementNamespaceID":4,"nextGrammarID":29},{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"7","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":0,"nextGrammarID":32}]},{"grammarID":"8","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":2,"nextGrammarID":32}]},{"grammarID":"9","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":4,"nextGrammarID":32}]},{"grammarID":"10","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"11","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":2,"startElementGrammarID":12,"nextGrammarID":32},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":6,"startElementGrammarID":13,"nextGrammarID":32},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":19,"startElementGrammarID":14,"nextGrammarID":32},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":5,"startElementGrammarID":15,"nextGrammarID":32},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":8,"startElementGrammarID":16,"nextGrammarID":32},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":7,"startElementGrammarID":17,"nextGrammarID":32}]},{"grammarID":"12","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":6,"nextGrammarID":32}]},{"grammarID":"13","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":7,"nextGrammarID":32}]},{"grammarID":"14","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":8,"nextGrammarID":32}]},{"grammarID":"15","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":9,"nextGrammarID":32}]},{"grammarID":"16","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":10,"nextGrammarID":32}]},{"grammarID":"17","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":11,"nextGrammarID":32}]},{"grammarID":"18","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":12,"nextGrammarID":32}]},{"grammarID":"19","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"attributeGeneric","nextGrammarID":19},{"event":"startElementGeneric","nextGrammarID":33},{"event":"endElement","nextGrammarID":-1},{"event":"charactersGeneric","nextGrammarID":33}]},{"grammarID":"20","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":14,"nextGrammarID":32}]},{"grammarID":"21","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":16,"nextGrammarID":32}]},{"grammarID":"22","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":18,"nextGrammarID":32}]},{"grammarID":"23","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":19,"nextGrammarID":32}]},{"grammarID":"24","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":20,"nextGrammarID":32}]},{"grammarID":"25","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":21,"nextGrammarID":32}]},{"grammarID":"26","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":22,"nextGrammarID":32}]},{"grammarID":"27","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":23,"nextGrammarID":32}]},{"grammarID":"28","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":24,"nextGrammarID":32}]},{"grammarID":"29","type":"elementContent","production":[{"event":"startElementNS","startElementNamespaceID":4,"nextGrammarID":29},{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"30","type":"elementContent","production":[]},{"grammarID":"31","type":"elementContent","production":[{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":9,"startElementGrammarID":6,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":0,"startElementGrammarID":5,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":17,"startElementGrammarID":7,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":13,"startElementGrammarID":8,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":3,"startElementGrammarID":9,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":11,"startElementGrammarID":10,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":15,"startElementGrammarID":11,"nextGrammarID":31},{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"32","type":"elementContent","production":[{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"33","type":"elementContent","production":[{"event":"startElementGeneric","nextGrammarID":33},{"event":"endElement","nextGrammarID":-1},{"event":"charactersGeneric","nextGrammarID":33}]}]}}';
-var jsonGrammarsObject = Grammars.fromJson(JSON.parse(jsonGrammars));
-var EXI4JSONDecoder = /** @class */ (function (_super) {
-    __extends(EXI4JSONDecoder, _super);
-    function EXI4JSONDecoder() {
+const jsonGrammars = '{"qnames":{"namespaceContext":[{"uriID":0,"uri":"","qnameContext":[]},{"uriID":1,"uri":"http://www.w3.org/XML/1998/namespace","qnameContext":[{"uriID":1,"localNameID":0,"localName":"base"},{"uriID":1,"localNameID":1,"localName":"id"},{"uriID":1,"localNameID":2,"localName":"lang"},{"uriID":1,"localNameID":3,"localName":"space"}]},{"uriID":2,"uri":"http://www.w3.org/2001/XMLSchema-instance","qnameContext":[{"uriID":2,"localNameID":0,"localName":"nil"},{"uriID":2,"localNameID":1,"localName":"type"}]},{"uriID":3,"uri":"http://www.w3.org/2001/XMLSchema","qnameContext":[{"uriID":3,"localNameID":0,"localName":"ENTITIES","globalTypeGrammarID":18},{"uriID":3,"localNameID":1,"localName":"ENTITY","globalTypeGrammarID":7},{"uriID":3,"localNameID":2,"localName":"ID","globalTypeGrammarID":7},{"uriID":3,"localNameID":3,"localName":"IDREF","globalTypeGrammarID":7},{"uriID":3,"localNameID":4,"localName":"IDREFS","globalTypeGrammarID":18},{"uriID":3,"localNameID":5,"localName":"NCName","globalTypeGrammarID":7},{"uriID":3,"localNameID":6,"localName":"NMTOKEN","globalTypeGrammarID":7},{"uriID":3,"localNameID":7,"localName":"NMTOKENS","globalTypeGrammarID":18},{"uriID":3,"localNameID":8,"localName":"NOTATION","globalTypeGrammarID":7},{"uriID":3,"localNameID":9,"localName":"Name","globalTypeGrammarID":7},{"uriID":3,"localNameID":10,"localName":"QName","globalTypeGrammarID":7},{"uriID":3,"localNameID":11,"localName":"anySimpleType","globalTypeGrammarID":7},{"uriID":3,"localNameID":12,"localName":"anyType","globalTypeGrammarID":19},{"uriID":3,"localNameID":13,"localName":"anyURI","globalTypeGrammarID":7},{"uriID":3,"localNameID":14,"localName":"base64Binary","globalTypeGrammarID":12},{"uriID":3,"localNameID":15,"localName":"boolean","globalTypeGrammarID":9},{"uriID":3,"localNameID":16,"localName":"byte","globalTypeGrammarID":20},{"uriID":3,"localNameID":17,"localName":"date","globalTypeGrammarID":15},{"uriID":3,"localNameID":18,"localName":"dateTime","globalTypeGrammarID":13},{"uriID":3,"localNameID":19,"localName":"decimal","globalTypeGrammarID":17},{"uriID":3,"localNameID":20,"localName":"double","globalTypeGrammarID":8},{"uriID":3,"localNameID":21,"localName":"duration","globalTypeGrammarID":7},{"uriID":3,"localNameID":22,"localName":"float","globalTypeGrammarID":8},{"uriID":3,"localNameID":23,"localName":"gDay","globalTypeGrammarID":21},{"uriID":3,"localNameID":24,"localName":"gMonth","globalTypeGrammarID":22},{"uriID":3,"localNameID":25,"localName":"gMonthDay","globalTypeGrammarID":23},{"uriID":3,"localNameID":26,"localName":"gYear","globalTypeGrammarID":24},{"uriID":3,"localNameID":27,"localName":"gYearMonth","globalTypeGrammarID":25},{"uriID":3,"localNameID":28,"localName":"hexBinary","globalTypeGrammarID":26},{"uriID":3,"localNameID":29,"localName":"int","globalTypeGrammarID":16},{"uriID":3,"localNameID":30,"localName":"integer","globalTypeGrammarID":16},{"uriID":3,"localNameID":31,"localName":"language","globalTypeGrammarID":7},{"uriID":3,"localNameID":32,"localName":"long","globalTypeGrammarID":16},{"uriID":3,"localNameID":33,"localName":"negativeInteger","globalTypeGrammarID":16},{"uriID":3,"localNameID":34,"localName":"nonNegativeInteger","globalTypeGrammarID":27},{"uriID":3,"localNameID":35,"localName":"nonPositiveInteger","globalTypeGrammarID":16},{"uriID":3,"localNameID":36,"localName":"normalizedString","globalTypeGrammarID":7},{"uriID":3,"localNameID":37,"localName":"positiveInteger","globalTypeGrammarID":27},{"uriID":3,"localNameID":38,"localName":"short","globalTypeGrammarID":16},{"uriID":3,"localNameID":39,"localName":"string","globalTypeGrammarID":7},{"uriID":3,"localNameID":40,"localName":"time","globalTypeGrammarID":14},{"uriID":3,"localNameID":41,"localName":"token","globalTypeGrammarID":7},{"uriID":3,"localNameID":42,"localName":"unsignedByte","globalTypeGrammarID":28},{"uriID":3,"localNameID":43,"localName":"unsignedInt","globalTypeGrammarID":27},{"uriID":3,"localNameID":44,"localName":"unsignedLong","globalTypeGrammarID":27},{"uriID":3,"localNameID":45,"localName":"unsignedShort","globalTypeGrammarID":27}]},{"uriID":4,"uri":"http://www.w3.org/2015/EXI/json","qnameContext":[{"uriID":4,"localNameID":0,"localName":"array","globalElementGrammarID":5},{"uriID":4,"localNameID":1,"localName":"arrayType","globalTypeGrammarID":5},{"uriID":4,"localNameID":2,"localName":"base64Binary"},{"uriID":4,"localNameID":3,"localName":"boolean","globalElementGrammarID":9},{"uriID":4,"localNameID":4,"localName":"booleanType","globalTypeGrammarID":9},{"uriID":4,"localNameID":5,"localName":"date"},{"uriID":4,"localNameID":6,"localName":"dateTime"},{"uriID":4,"localNameID":7,"localName":"decimal"},{"uriID":4,"localNameID":8,"localName":"integer"},{"uriID":4,"localNameID":9,"localName":"map","globalElementGrammarID":6},{"uriID":4,"localNameID":10,"localName":"mapType","globalTypeGrammarID":6},{"uriID":4,"localNameID":11,"localName":"null","globalElementGrammarID":10},{"uriID":4,"localNameID":12,"localName":"nullType","globalTypeGrammarID":10},{"uriID":4,"localNameID":13,"localName":"number","globalElementGrammarID":8},{"uriID":4,"localNameID":14,"localName":"numberType","globalTypeGrammarID":8},{"uriID":4,"localNameID":15,"localName":"other","globalElementGrammarID":11},{"uriID":4,"localNameID":16,"localName":"otherType","globalTypeGrammarID":11},{"uriID":4,"localNameID":17,"localName":"string","globalElementGrammarID":7},{"uriID":4,"localNameID":18,"localName":"stringType","globalTypeGrammarID":7},{"uriID":4,"localNameID":19,"localName":"time"}]}]},"simpleDatatypes":[{"simpleDatatypeID":0,"type":"STRING"},{"simpleDatatypeID":1,"type":"STRING"},{"simpleDatatypeID":2,"type":"FLOAT"},{"simpleDatatypeID":3,"type":"FLOAT"},{"simpleDatatypeID":4,"type":"BOOLEAN"},{"simpleDatatypeID":5,"type":"BOOLEAN"},{"simpleDatatypeID":6,"type":"BINARY_BASE64"},{"simpleDatatypeID":7,"type":"DATETIME","datetimeType":"dateTime"},{"simpleDatatypeID":8,"type":"DATETIME","datetimeType":"time"},{"simpleDatatypeID":9,"type":"DATETIME","datetimeType":"date"},{"simpleDatatypeID":10,"type":"INTEGER"},{"simpleDatatypeID":11,"type":"DECIMAL"},{"simpleDatatypeID":12,"type":"LIST","listType":"STRING"},{"simpleDatatypeID":13,"type":"LIST","listType":"STRING"},{"simpleDatatypeID":14,"type":"NBIT_UNSIGNED_INTEGER","lowerBound":-128,"upperBound":127},{"simpleDatatypeID":15,"type":"INTEGER"},{"simpleDatatypeID":16,"type":"DATETIME","datetimeType":"gDay"},{"simpleDatatypeID":17,"type":"STRING"},{"simpleDatatypeID":18,"type":"DATETIME","datetimeType":"gMonth"},{"simpleDatatypeID":19,"type":"DATETIME","datetimeType":"gMonthDay"},{"simpleDatatypeID":20,"type":"DATETIME","datetimeType":"gYear"},{"simpleDatatypeID":21,"type":"DATETIME","datetimeType":"gYearMonth"},{"simpleDatatypeID":22,"type":"BINARY_HEX"},{"simpleDatatypeID":23,"type":"UNSIGNED_INTEGER"},{"simpleDatatypeID":24,"type":"NBIT_UNSIGNED_INTEGER","lowerBound":0,"upperBound":255},{"simpleDatatypeID":25,"type":"UNSIGNED_INTEGER"}],"grs":{"documentGrammarID":0,"fragmentGrammarID":3,"grammar":[{"grammarID":"0","type":"document","production":[{"event":"startDocument","nextGrammarID":1}]},{"grammarID":"1","type":"docContent","production":[{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":0,"startElementGrammarID":5,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":3,"startElementGrammarID":9,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":9,"startElementGrammarID":6,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":11,"startElementGrammarID":10,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":13,"startElementGrammarID":8,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":15,"startElementGrammarID":11,"nextGrammarID":2},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":17,"startElementGrammarID":7,"nextGrammarID":2},{"event":"startElementGeneric","nextGrammarID":2}]},{"grammarID":"2","type":"docEnd","production":[{"event":"endDocument","nextGrammarID":-1}]},{"grammarID":"3","type":"fragment","production":[{"event":"startDocument","nextGrammarID":4}]},{"grammarID":"4","type":"fragmentContent","production":[{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":0,"startElementGrammarID":5,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":2,"startElementGrammarID":12,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":3,"startElementGrammarID":9,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":5,"startElementGrammarID":15,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":6,"startElementGrammarID":13,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":7,"startElementGrammarID":17,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":8,"startElementGrammarID":16,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":9,"startElementGrammarID":6,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":11,"startElementGrammarID":10,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":13,"startElementGrammarID":8,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":15,"startElementGrammarID":11,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":17,"startElementGrammarID":7,"nextGrammarID":4},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":19,"startElementGrammarID":14,"nextGrammarID":4},{"event":"startElementGeneric","nextGrammarID":4},{"event":"endDocument","nextGrammarID":-1}]},{"grammarID":"5","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":9,"startElementGrammarID":6,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":0,"startElementGrammarID":5,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":17,"startElementGrammarID":7,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":13,"startElementGrammarID":8,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":3,"startElementGrammarID":9,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":11,"startElementGrammarID":10,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":15,"startElementGrammarID":11,"nextGrammarID":31},{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"6","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"startElementNS","startElementNamespaceID":4,"nextGrammarID":29},{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"7","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":0,"nextGrammarID":32}]},{"grammarID":"8","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":2,"nextGrammarID":32}]},{"grammarID":"9","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":4,"nextGrammarID":32}]},{"grammarID":"10","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"11","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":2,"startElementGrammarID":12,"nextGrammarID":32},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":6,"startElementGrammarID":13,"nextGrammarID":32},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":19,"startElementGrammarID":14,"nextGrammarID":32},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":5,"startElementGrammarID":15,"nextGrammarID":32},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":8,"startElementGrammarID":16,"nextGrammarID":32},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":7,"startElementGrammarID":17,"nextGrammarID":32}]},{"grammarID":"12","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":6,"nextGrammarID":32}]},{"grammarID":"13","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":7,"nextGrammarID":32}]},{"grammarID":"14","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":8,"nextGrammarID":32}]},{"grammarID":"15","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":9,"nextGrammarID":32}]},{"grammarID":"16","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":10,"nextGrammarID":32}]},{"grammarID":"17","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":11,"nextGrammarID":32}]},{"grammarID":"18","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":12,"nextGrammarID":32}]},{"grammarID":"19","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"attributeGeneric","nextGrammarID":19},{"event":"startElementGeneric","nextGrammarID":33},{"event":"endElement","nextGrammarID":-1},{"event":"charactersGeneric","nextGrammarID":33}]},{"grammarID":"20","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":14,"nextGrammarID":32}]},{"grammarID":"21","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":16,"nextGrammarID":32}]},{"grammarID":"22","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":18,"nextGrammarID":32}]},{"grammarID":"23","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":19,"nextGrammarID":32}]},{"grammarID":"24","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":20,"nextGrammarID":32}]},{"grammarID":"25","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":21,"nextGrammarID":32}]},{"grammarID":"26","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":22,"nextGrammarID":32}]},{"grammarID":"27","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":23,"nextGrammarID":32}]},{"grammarID":"28","type":"firstStartTagContent","isTypeCastable":false,"isNillable":false,"production":[{"event":"characters","charactersDatatypeID":24,"nextGrammarID":32}]},{"grammarID":"29","type":"elementContent","production":[{"event":"startElementNS","startElementNamespaceID":4,"nextGrammarID":29},{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"30","type":"elementContent","production":[]},{"grammarID":"31","type":"elementContent","production":[{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":9,"startElementGrammarID":6,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":0,"startElementGrammarID":5,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":17,"startElementGrammarID":7,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":13,"startElementGrammarID":8,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":3,"startElementGrammarID":9,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":11,"startElementGrammarID":10,"nextGrammarID":31},{"event":"startElement","startElementNamespaceID":4,"startElementLocalNameID":15,"startElementGrammarID":11,"nextGrammarID":31},{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"32","type":"elementContent","production":[{"event":"endElement","nextGrammarID":-1}]},{"grammarID":"33","type":"elementContent","production":[{"event":"startElementGeneric","nextGrammarID":33},{"event":"endElement","nextGrammarID":-1},{"event":"charactersGeneric","nextGrammarID":33}]}]}}';
+const jsonGrammarsObject = Grammars.fromJson(JSON.parse(jsonGrammars));
+export class EXI4JSONDecoder extends EXIDecoder {
+    constructor() {
         // Note: JSON grammars (see variable jsonGrammarsObject) is implicit
-        return _super.call(this, jsonGrammarsObject, {}) || this;
+        super(jsonGrammarsObject, {});
     }
-    return EXI4JSONDecoder;
-}(EXIDecoder));
-var EXI4JSONEncoder = /** @class */ (function (_super) {
-    __extends(EXI4JSONEncoder, _super);
-    function EXI4JSONEncoder() {
+}
+export class EXI4JSONEncoder extends EXIEncoder {
+    constructor() {
         // Note: JSON grammars (see variable jsonGrammarsObject) is implicit
-        return _super.call(this, jsonGrammarsObject, {}) || this;
+        super(jsonGrammarsObject, {});
     }
-    EXI4JSONEncoder.prototype.encodeJsonText = function (textJSON) {
-        var jsonObj = JSON.parse(textJSON);
+    encodeJsonText(textJSON) {
+        let jsonObj = JSON.parse(textJSON);
         this.encodeJsonObject(jsonObj);
-    };
-    EXI4JSONEncoder.prototype.encodeJsonObject = function (jsonObj) {
+    }
+    encodeJsonObject(jsonObj) {
         this.startDocument();
         // encode
         if (jsonObj instanceof Array) {
@@ -2731,8 +2696,8 @@ var EXI4JSONEncoder = /** @class */ (function (_super) {
             throw new Error("Neither array nor object root");
         }
         this.endDocument();
-    };
-    EXI4JSONEncoder.prototype.processJSONArray = function (jsonArray) {
+    }
+    processJSONArray(jsonArray) {
         var arrayLength = jsonArray.length;
         for (var i = 0; i < arrayLength; i++) {
             var val = jsonArray[i];
@@ -2770,13 +2735,13 @@ var EXI4JSONEncoder = /** @class */ (function (_super) {
                 throw new Error("Not supported object type: " + (typeof val));
             }
         }
-    };
-    EXI4JSONEncoder.prototype.processJSONObject = function (jsonObj) {
-        var keys = Object.keys(jsonObj);
-        for (var key in jsonObj) {
+    }
+    processJSONObject(jsonObj) {
+        let keys = Object.keys(jsonObj);
+        for (let key in jsonObj) {
             if (jsonObj.hasOwnProperty(key)) {
                 /* useful code here */
-                var val = jsonObj[key];
+                let val = jsonObj[key];
                 console.log("JSON " + key + ": " + val);
                 if (val instanceof Array) {
                     this.startElement(exiForJsonUri, EXI4JSONEncoder.escapeKey(key));
@@ -2827,8 +2792,8 @@ var EXI4JSONEncoder = /** @class */ (function (_super) {
                 }
             }
         }
-    };
-    EXI4JSONEncoder.escapeKey = function (key) {
+    }
+    static escapeKey(key) {
         if ("map" === key || "array" === key
             || "string" === key || "number" === key
             || "boolean" === key || "null" === key
@@ -2842,15 +2807,15 @@ var EXI4JSONEncoder = /** @class */ (function (_super) {
             key = this.escapeNCNamePlus(key);
         }
         return key;
-    };
-    EXI4JSONEncoder.escapeNCNamePlus = function (name) {
+    }
+    static escapeNCNamePlus(name) {
         if (name === null || name.length == 0) {
             throw new Error("Unsupported NCName: " + name);
         }
-        var sb = "";
-        for (var i = 0; i < name.length; i++) {
-            var c = name.charAt(i);
-            var cc = name.charCodeAt(i);
+        let sb = "";
+        for (let i = 0; i < name.length; i++) {
+            let c = name.charAt(i);
+            let cc = name.charCodeAt(i);
             // String.fromCharCode(10);
             if (i == 0) {
                 // first character (special)
@@ -2918,18 +2883,18 @@ var EXI4JSONEncoder = /** @class */ (function (_super) {
         else {
             return sb;
         }
-    };
-    EXI4JSONEncoder.isNCNameChar = function (c) {
+    }
+    static isNCNameChar(c) {
         return this._isAsciiBaseChar(c) || this._isAsciiDigit(c) || c == '.'.charCodeAt(0) || c == '-'.charCodeAt(0) || c == '_'.charCodeAt(0) || this._isNonAsciiBaseChar(c)
             || this._isNonAsciiDigit(c) || this.isIdeographic(c) || this.isCombiningChar(c) || this.isExtender(c);
-    };
-    EXI4JSONEncoder.isLetter = function (c) {
+    }
+    static isLetter(c) {
         return this._isAsciiBaseChar(c) || this._isNonAsciiBaseChar(c) || this.isIdeographic(c);
-    };
-    EXI4JSONEncoder._isAsciiBaseChar = function (c) {
+    }
+    static _isAsciiBaseChar(c) {
         return this._charInRange(c, 0x0041, 0x005A) || this._charInRange(c, 0x0061, 0x007A);
-    };
-    EXI4JSONEncoder._isNonAsciiBaseChar = function (c) {
+    }
+    static _isNonAsciiBaseChar(c) {
         return this._charInRange(c, 0x00C0, 0x00D6) || this._charInRange(c, 0x00D8, 0x00F6) || this._charInRange(c, 0x00F8, 0x00FF)
             || this._charInRange(c, 0x0100, 0x0131) || this._charInRange(c, 0x0134, 0x013E) || this._charInRange(c, 0x0141, 0x0148)
             || this._charInRange(c, 0x014A, 0x017E) || this._charInRange(c, 0x0180, 0x01C3) || this._charInRange(c, 0x01CD, 0x01F0)
@@ -2991,11 +2956,11 @@ var EXI4JSONEncoder = /** @class */ (function (_super) {
             || this._charInRange(c, 0x212A, 0x212B) || c == 0x212E || this._charInRange(c, 0x2180, 0x2182)
             || this._charInRange(c, 0x3041, 0x3094) || this._charInRange(c, 0x30A1, 0x30FA) || this._charInRange(c, 0x3105, 0x312C)
             || this._charInRange(c, 0xAC00, 0xD7A3);
-    };
-    EXI4JSONEncoder.isIdeographic = function (c) {
+    }
+    static isIdeographic(c) {
         return this._charInRange(c, 0x4E00, 0x9FA5) || c == 0x3007 || this._charInRange(c, 0x3021, 0x3029);
-    };
-    EXI4JSONEncoder.isCombiningChar = function (c) {
+    }
+    static isCombiningChar(c) {
         return this._charInRange(c, 0x0300, 0x0345) || this._charInRange(c, 0x0360, 0x0361) || this._charInRange(c, 0x0483, 0x0486)
             || this._charInRange(c, 0x0591, 0x05A1) || this._charInRange(c, 0x05A3, 0x05B9) || this._charInRange(c, 0x05BB, 0x05BD)
             || c == 0x05BF || this._charInRange(c, 0x05C1, 0x05C2) || c == 0x05C4 || this._charInRange(c, 0x064B, 0x0652)
@@ -3025,37 +2990,35 @@ var EXI4JSONEncoder = /** @class */ (function (_super) {
             || c == 0x0F97 || this._charInRange(c, 0x0F99, 0x0FAD) || this._charInRange(c, 0x0FB1, 0x0FB7) || c == 0x0FB9
             || this._charInRange(c, 0x20D0, 0x20DC) || c == 0x20E1 || this._charInRange(c, 0x302A, 0x302F) || c == 0x3099
             || c == 0x309A;
-    };
-    EXI4JSONEncoder.isDigit = function (c) {
+    }
+    static isDigit(c) {
         return this._isAsciiDigit(c) || this._isNonAsciiDigit(c);
-    };
-    EXI4JSONEncoder._isAsciiDigit = function (c) {
+    }
+    static _isAsciiDigit(c) {
         return this._charInRange(c, 0x0030, 0x0039);
-    };
-    EXI4JSONEncoder._isNonAsciiDigit = function (c) {
+    }
+    static _isNonAsciiDigit(c) {
         return this._charInRange(c, 0x0660, 0x0669) || this._charInRange(c, 0x06F0, 0x06F9) || this._charInRange(c, 0x0966, 0x096F)
             || this._charInRange(c, 0x09E6, 0x09EF) || this._charInRange(c, 0x0A66, 0x0A6F) || this._charInRange(c, 0x0AE6, 0x0AEF)
             || this._charInRange(c, 0x0B66, 0x0B6F) || this._charInRange(c, 0x0BE7, 0x0BEF) || this._charInRange(c, 0x0C66, 0x0C6F)
             || this._charInRange(c, 0x0CE6, 0x0CEF) || this._charInRange(c, 0x0D66, 0x0D6F) || this._charInRange(c, 0x0E50, 0x0E59)
             || this._charInRange(c, 0x0ED0, 0x0ED9) || this._charInRange(c, 0x0F20, 0x0F29);
-    };
-    EXI4JSONEncoder.isExtender = function (c) {
+    }
+    static isExtender(c) {
         return c == 0x00B7 || c == 0x02D0 || c == 0x02D1 || c == 0x0387 || c == 0x0640 || c == 0x0E46 || c == 0x0EC6
             || c == 0x3005 || this._charInRange(c, 0x3031, 0x3035) || this._charInRange(c, 0x309D, 0x309E)
             || this._charInRange(c, 0x30FC, 0x30FE);
-    };
-    EXI4JSONEncoder._charInRange = function (c, start, end) {
-        var ccode = c; // c.charCodeAt(0);
+    }
+    static _charInRange(c, start, end) {
+        let ccode = c; // c.charCodeAt(0);
         return ccode >= start && ccode <= end;
         // charCodeAt
-    };
-    return EXI4JSONEncoder;
-}(EXIEncoder));
-var JSONEventHandler = /** @class */ (function (_super) {
-    __extends(JSONEventHandler, _super);
-    function JSONEventHandler() {
-        var _this = _super.call(this) || this;
-        _this.unescapeKey = function (key) {
+    }
+}
+export class JSONEventHandler extends EventHandler {
+    constructor() {
+        super();
+        this.unescapeKey = function (key) {
             var sb = "";
             // conflicting names
             if (key.length > 2 && key.charAt(0) == "_" && key.charAt(1) == ".") {
@@ -3096,20 +3059,19 @@ var JSONEventHandler = /** @class */ (function (_super) {
                 return sb;
             }
         };
-        return _this;
     }
-    JSONEventHandler.prototype.getJSON = function () {
+    getJSON() {
         return this.json;
-    };
-    JSONEventHandler.prototype.startDocument = function () {
+    }
+    startDocument() {
         // this.openTag = null;
         // this.openTagKey = null;
         this.json = null;
         this.jsonStack = [];
-    };
-    JSONEventHandler.prototype.endDocument = function () {
-    };
-    JSONEventHandler.prototype.startElement = function (namespace, localName) {
+    }
+    endDocument() {
+    }
+    startElement(namespace, localName) {
         if (this.json === null) {
             // root element still missing
             if (localName === "map") {
@@ -3126,7 +3088,7 @@ var JSONEventHandler = /** @class */ (function (_super) {
         }
         else {
             if (localName === "map" || localName === "array") {
-                var value = void 0;
+                let value;
                 if (localName === "map") {
                     value = new Object();
                 }
@@ -3155,15 +3117,15 @@ var JSONEventHandler = /** @class */ (function (_super) {
                 this.jsonStack.push(localName);
             }
         }
-    };
-    JSONEventHandler.prototype.endElement = function (namespace, localName) {
+    }
+    endElement(namespace, localName) {
         var top = this.jsonStack[this.jsonStack.length - 1];
         var value;
         if (top === "number") {
-            value = new Number(this.chars);
+            value = Number(this.chars);
         }
         else if (top === "string") {
-            value = new String(this.chars);
+            value = String(this.chars);
         }
         else if (top === "boolean") {
             value = (this.chars == 'true');
@@ -3190,49 +3152,44 @@ var JSONEventHandler = /** @class */ (function (_super) {
             this.chars = null;
         }
         this.jsonStack.pop();
-    };
-    JSONEventHandler.prototype.attribute = function (namespace, localName, value) {
-    };
-    JSONEventHandler.prototype.characters = function (chars) {
+    }
+    attribute(namespace, localName, value) {
+    }
+    characters(chars) {
         console.log("chars: " + chars);
         this.chars = chars;
-    };
-    return JSONEventHandler;
-}(EventHandler));
-var EXI4JSON = /** @class */ (function () {
-    function EXI4JSON() {
+    }
+}
+export class EXI4JSON {
+    constructor() {
         this.encoder = new EXI4JSONEncoder();
         this.decoder = new EXI4JSONDecoder();
     }
-    EXI4JSON.prototype.exify = function (jsonObj) {
+    exify(jsonObj) {
         this.encoder.encodeJsonObject(jsonObj);
         // EXI4JSON.encoder.encodeJsonObject(jsonObj);
-        var uint8ArrayLength = this.encoder.getUint8ArrayLength();
-        var uint8Array = this.encoder.getUint8Array();
+        let uint8ArrayLength = this.encoder.getUint8ArrayLength();
+        let uint8Array = this.encoder.getUint8Array();
         return uint8Array;
-    };
-    EXI4JSON.prototype.parse = function (uint8Array) {
-        var jsonHandler = new JSONEventHandler();
+    }
+    parse(uint8Array) {
+        let jsonHandler = new JSONEventHandler();
         this.decoder.registerEventHandler(jsonHandler);
         this.decoder.decode(uint8Array);
         // var jsonText = JSON.stringify(jsonHandler.getJSON(), null, "\t");
         return jsonHandler.getJSON();
-    };
-    return EXI4JSON;
-}());
-exports.EXI4JSON = EXI4JSON;
-function exify(jsonObj) {
-    var encoder = new EXI4JSONEncoder();
+    }
+}
+export function exify(jsonObj) {
+    let encoder = new EXI4JSONEncoder();
     encoder.encodeJsonObject(jsonObj);
-    var uint8Array = encoder.getUint8Array();
+    let uint8Array = encoder.getUint8Array();
     return uint8Array;
 }
-exports.exify = exify;
-function parse(uint8Array) {
-    var decoder = new EXI4JSONDecoder();
-    var jsonHandler = new JSONEventHandler();
+export function parse(uint8Array) {
+    let decoder = new EXI4JSONDecoder();
+    let jsonHandler = new JSONEventHandler();
     decoder.registerEventHandler(jsonHandler);
     decoder.decode(uint8Array);
     return jsonHandler.getJSON();
 }
-exports.parse = parse;

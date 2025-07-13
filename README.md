@@ -1,22 +1,26 @@
 # exificient.js
+
 JavaScript Implementation of [EXI](https://www.w3.org/TR/exi/) and [EXI for JSON](https://www.w3.org/TR/exi-for-json/)
 
-[![Build Status](https://travis-ci.org/EXIficient/exificient.js.svg?branch=master)](https://travis-ci.org/EXIficient/exificient.js)
+Ever so slightly modified version of [EXIficient/exificient.js](
+https://github.com/EXIficient/exificient.js) because the original repository
+hasn't been updated in a while and there are no type definitions available
+despite the fact that the code is written in TypeScript.
 
 ## How to get
 
 ### NPM
 
-https://www.npmjs.com/package/exificient.js
+<https://www.npmjs.com/package/@selfmadesystem/exificient.js>
 
-```
-npm install exificient.js
+```sh
+npm install @selfmadesystem/exificient.js
 ```
 
 ### unpkg, CDN (content delivery network)
 
-```
-https://unpkg.com/exificient.js@0.0.5/dist/exificient.js
+```sh
+https://unpkg.com/@selfmadesystem/exificient.js@0.0.6/dist/exificient.js
 ```
 
 ## Demo
@@ -35,7 +39,6 @@ var uint8Array = EXI4JSON.exify(jsonObjIn);
 var jsonObjOut = EXI4JSON.parse(uint8Array);
 ```
 
-
 ### HowTo for EXI
 
 ```javascript
@@ -44,7 +47,7 @@ var jsonObjOut = EXI4JSON.parse(uint8Array);
 // class com.siemens.ct.exi.grammars.persistency.Grammars2JSON 
 
 // encode XML
-var exiEncoder = new EXIEncoder(grammars);	
+var exiEncoder = new EXIEncoder(grammars);
 exiEncoder.encodeXmlText(textXML);
 var uint8ArrayLength = exiEncoder.getUint8ArrayLength();
 var uint8Array = exiEncoder.getUint8Array();
