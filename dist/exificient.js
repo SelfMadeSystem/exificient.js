@@ -205,7 +205,7 @@ class Grammars {
         // copy content as is
         let grammars = json;
         grammars.isSchemaLess = schemaLess;
-        console.log("SchemaLess: " + grammars.isSchemaLess);
+        //console.log("SchemaLess: " + grammars.isSchemaLess);
         // fix enum string to numbers
         if (grammars.simpleDatatypes != undefined) {
             for (let i = 0; i < grammars.simpleDatatypes.length; i++) {
@@ -278,7 +278,7 @@ class AbtractEXICoder {
     // WARNING: not specified in EXI 1.0 core (is extension)
     setSharedStrings(sharedStrings) {
         this.sharedStrings = sharedStrings;
-        console.log("Set sharedStrings: " + this.sharedStrings);
+        //console.log("Set sharedStrings: " + this.sharedStrings);
     }
     init() {
         // this.grammars = this.grammarsCopy;
@@ -302,9 +302,9 @@ class AbtractEXICoder {
             }
         }
         this.stringTable = new StringTable();
-        // console.log("SharedStringsX: " + this.sharedStrings + Object.prototype.toString.call(this.sharedStrings));
+        // //console.log("SharedStringsX: " + this.sharedStrings + Object.prototype.toString.call(this.sharedStrings));
         if (this.sharedStrings != null && this.sharedStrings instanceof Array) {
-            console.log("SharedStrings: " + this.sharedStrings);
+            //console.log("SharedStrings: " + this.sharedStrings);
             for (var i = 0; i < this.sharedStrings.length; i++) {
                 this.stringTable.addValue(-1, -1, this.sharedStrings[i]);
             }
@@ -675,7 +675,7 @@ export class BitInputStream {
                 result += (this.decodeNBitUnsignedInteger(8, false) << bitsRead);
                 bitsRead += 8;
             }
-            // console.log("\t" + " decodeNBitUnsignedInteger nbits=" + nbits + " --> " + result);
+            // //console.log("\t" + " decodeNBitUnsignedInteger nbits=" + nbits + " --> " + result);
             return result;
         }
         else {
@@ -724,7 +724,7 @@ export class BitInputStream {
                             }
                         }
                     }
-                    console.log("\t" + " decodeNBitUnsignedInteger --> " + result);
+                    //console.log("\t" + " decodeNBitUnsignedInteger --> " + result);
                     return result;
                 }
                 if (this.errn !== 0) {
@@ -751,7 +751,7 @@ export class BitInputStream {
             mul = mul * 128;
         }
         intVal = intVal + (mul * val);
-        console.log("\t" + " decodeUnsignedInteger --> " + intVal);
+        //console.log("\t" + " decodeUnsignedInteger --> " + intVal);
         return intVal;
         /*
         var result = this.decodeNBitUnsignedInteger(8);
@@ -800,7 +800,7 @@ export class BitInputStream {
             // magnitude of the value minus 1
             i = (-(this.decodeUnsignedInteger() + 1));
         }
-        console.log("\t" + " decodeInteger --> " + i);
+        //console.log("\t" + " decodeInteger --> " + i);
         return i;
     }
     /**
@@ -879,7 +879,7 @@ export class EXIDecoder extends AbtractEXICoder {
         else if (datatype.type === SimpleDatatypeType.LIST) {
             var sList = "";
             var listLength = this.bitStream.decodeUnsignedInteger();
-            console.log("\t" + " LIST with length " + listLength);
+            //console.log("\t" + " LIST with length " + listLength );
             for (var i = 0; i < this.eventHandler.length; i++) {
                 var eh = this.eventHandler[i];
                 if (isCharactersEvent) {
@@ -929,7 +929,7 @@ export class EXIDecoder extends AbtractEXICoder {
     decodeDatatypeValueString(namespaceID, localNameID, isCharactersEvent) {
         var s;
         var i = this.bitStream.decodeUnsignedInteger();
-        // console.log("\t" + " String i: " + i );
+        // //console.log("\t" + " String i: " + i );
         switch (i) {
             case 0:
                 /* local value hit */
@@ -937,8 +937,8 @@ export class EXIDecoder extends AbtractEXICoder {
                     .getNumberOfLocalStrings(namespaceID, localNameID));
                 var localID = this.bitStream.decodeNBitUnsignedInteger(n, this.isByteAligned);
                 var lhit = this.stringTable.getLocalValue(namespaceID, localNameID, localID);
-                console.log("\t" + " String localValue hit '" + lhit.value
-                    + "'");
+                //console.log("\t" + " String localValue hit '" + lhit.value
+                //		 + "'");
                 s = lhit.value;
                 break;
             case 1:
@@ -947,8 +947,8 @@ export class EXIDecoder extends AbtractEXICoder {
                     .getNumberOfGlobalStrings());
                 var globalID = this.bitStream.decodeNBitUnsignedInteger(n, this.isByteAligned);
                 var ghit = this.stringTable.getGlobalValue(globalID);
-                console.log("\t" + " String globalValue hit '" + ghit.value
-                    + "'");
+                //console.log("\t" + " String globalValue hit '" + ghit.value
+                //		+ "'");
                 s = ghit.value;
                 break;
             default:
@@ -958,12 +958,12 @@ export class EXIDecoder extends AbtractEXICoder {
                 i = i - 2;
                 if (i === 0) {
                     // empty string
-                    console.log("\t" + " String is empty string ''");
+                    //console.log("\t" + " String is empty string ''");
                     s = "";
                 }
                 else {
                     s = this.bitStream.decodeStringOnly(i);
-                    console.log("\t" + " String = " + s);
+                    //console.log("\t" + " String = " + s);
                     this.stringTable.addValue(namespaceID, localNameID, s);
                 }
                 break;
@@ -982,7 +982,7 @@ export class EXIDecoder extends AbtractEXICoder {
     }
     decodeDatatypeValueUnsignedInteger(namespaceID, localNameID, isCharactersEvent) {
         let uint = this.bitStream.decodeUnsignedInteger();
-        console.log("\t" + " UNSIGNED_INTEGER = " + uint);
+        //console.log("\t" + " UNSIGNED_INTEGER = " + uint);
         for (let i = 0; i < this.eventHandler.length; i++) {
             var eh = this.eventHandler[i];
             if (isCharactersEvent) {
@@ -997,7 +997,7 @@ export class EXIDecoder extends AbtractEXICoder {
     }
     decodeDatatypeValueInteger(namespaceID, localNameID, isCharactersEvent) {
         var int = this.bitStream.decodeInteger(this.isByteAligned);
-        console.log("\t" + " INTEGER = " + int);
+        //console.log("\t" + " INTEGER = " + int);
         var i;
         for (i = 0; i < this.eventHandler.length; i++) {
             var eh = this.eventHandler[i];
@@ -1014,7 +1014,7 @@ export class EXIDecoder extends AbtractEXICoder {
     decodeDatatypeValueFloat(namespaceID, localNameID, isCharactersEvent) {
         var mantissa = this.bitStream.decodeInteger(this.isByteAligned);
         var exponent = this.bitStream.decodeInteger(this.isByteAligned);
-        console.log("\t" + " float = " + mantissa + "E" + exponent);
+        //console.log("\t" + " float = " + mantissa + "E" + exponent);
         var i;
         for (i = 0; i < this.eventHandler.length; i++) {
             var eh = this.eventHandler[i];
@@ -1032,7 +1032,7 @@ export class EXIDecoder extends AbtractEXICoder {
     decodeDatatypeValueBoolean(namespaceID, localNameID, isCharactersEvent) {
         var b = this.bitStream.decodeNBitUnsignedInteger(1, this.isByteAligned) === 0 ? false
             : true;
-        console.log("\t" + " boolean = " + b);
+        //console.log("\t" + " boolean = " + b);
         for (var i = 0; i < this.eventHandler.length; i++) {
             var eh = this.eventHandler[i];
             if (isCharactersEvent) {
@@ -1048,7 +1048,7 @@ export class EXIDecoder extends AbtractEXICoder {
     decodeDatatypeValueEnumeration(enumValues, namespaceID, localNameID, isCharactersEvent) {
         let index = this.bitStream.decodeNBitUnsignedInteger(this.getCodeLength(enumValues.length), this.isByteAligned);
         let value = enumValues[index];
-        console.log("\t" + " enum = " + value);
+        //console.log("\t" + " enum = " + value);
         for (var i = 0; i < this.eventHandler.length; i++) {
             var eh = this.eventHandler[i];
             if (isCharactersEvent) {
@@ -1089,11 +1089,11 @@ export class EXIDecoder extends AbtractEXICoder {
         }
         var presenceTimezone = this.bitStream.decodeNBitUnsignedInteger(1, this.isByteAligned) === 0 ? false
             : true;
-        // console.log("\t" + " presenceTimezone = " + presenceTimezone);
+        // //console.log("\t" + " presenceTimezone = " + presenceTimezone);
         if (presenceTimezone) {
             var timeZone = this.bitStream.decodeNBitUnsignedInteger(11, this.isByteAligned) - 896;
         }
-        console.log("\t" + " datetime = " + sDatetime);
+        //console.log("\t" + " datetime = " + sDatetime);
         for (var i = 0; i < this.eventHandler.length; i++) {
             var eh = this.eventHandler[i];
             if (isCharactersEvent) {
@@ -1110,9 +1110,9 @@ export class EXIDecoder extends AbtractEXICoder {
         let popStack = false;
         while (!popStack) {
             let codeLength = this.getCodeLengthForGrammar(grammar);
-            console.log("\t" + "CodeLength == " + codeLength);
+            //console.log("\t" + "CodeLength == " + codeLength );
             let ec = this.bitStream.decodeNBitUnsignedInteger(codeLength, this.isByteAligned); //
-            console.log("\t" + "EventCode == " + ec);
+            //console.log("\t" + "EventCode == " + ec );
             let event;
             let prod;
             if (ec >= grammar.production.length) {
@@ -1133,14 +1133,14 @@ export class EXIDecoder extends AbtractEXICoder {
             }
             switch (event) {
                 case EventType.startDocument:
-                    console.log("> SD");
+                    //console.log("> SD");
                     for (let i = 0; i < this.eventHandler.length; i++) {
                         let eh = this.eventHandler[i];
                         eh.startDocument();
                     }
                     break;
                 case EventType.endDocument:
-                    console.log("< ED");
+                    //console.log("< ED");
                     for (let i = 0; i < this.eventHandler.length; i++) {
                         let eh = this.eventHandler[i];
                         eh.endDocument();
@@ -1150,9 +1150,9 @@ export class EXIDecoder extends AbtractEXICoder {
                 case EventType.startElement:
                 case EventType.startElementNS:
                 case EventType.startElementGeneric:
-                    // console.log("\t" + "StartElement qnameID " +
+                    // //console.log("\t" + "StartElement qnameID " +
                     // prod.startElementQNameID );
-                    // console.log("\t" + "StartElement name " +
+                    // //console.log("\t" + "StartElement name " +
                     // getQNameContext(prod.startElementQNameID).localName);
                     let seGrammar;
                     let qnameContext;
@@ -1167,19 +1167,19 @@ export class EXIDecoder extends AbtractEXICoder {
                         }
                         seGrammar = this.getGrammar(prod.startElementGrammarID);
                         qnameContext = namespaceContext.qnameContext[prod.startElementLocalNameID];
-                        console.log(">> SE (" + qnameContext.localName + ")");
+                        //console.log(">> SE (" + qnameContext.localName + ")");
                     }
                     else if (event == EventType.startElementNS) {
                         // SE_NS
                         // decode local-name
                         qnameContext = this.decodeLocalName(namespaceContext);
-                        console.log(">> SE_NS (" + namespaceContext.uri + ", " + qnameContext.localName + ")");
+                        //console.log(">> SE_NS (" + namespaceContext.uri + ", " + qnameContext.localName + ")");
                         seGrammar = this.getGlobalStartElement(qnameContext);
                     }
                     else {
                         // SE(*)
                         qnameContext = this.decodeQName();
-                        console.log(">> SE_GENERIC (" + qnameContext.uriID + ", " + qnameContext.localName + ")");
+                        //console.log(">> SE_GENERIC (" + qnameContext.uriID + ", " + qnameContext.localName + ")");
                         seGrammar = this.getGlobalStartElement(qnameContext);
                         //					seGrammar = this.getGlobalStartElement(qnameContext);
                         //					nextGrammar = grammar.elementContent; // TODO check which grammar it is (BuiltIn?)
@@ -1193,7 +1193,7 @@ export class EXIDecoder extends AbtractEXICoder {
                         else if (grammar.type === GrammarType.builtInStartTagContent || grammar.type === GrammarType.builtInElementContent) {
                             seGrammar = this.getGlobalStartElement(qnameContext);
                             nextGrammar = grammar.elementContent; // TODO check which grammar it is (BuiltIn?)
-                            console.log("NextGrammar after SE(*) is " + nextGrammar);
+                            //console.log("NextGrammar after SE(*) is " + nextGrammar);
                             // learn SE
                             this.learnStartElement(grammar, seGrammar.grammarID, qnameContext);
                         }
@@ -1205,17 +1205,17 @@ export class EXIDecoder extends AbtractEXICoder {
                         let eh = this.eventHandler[i];
                         let ns = this.grammars.qnames.namespaceContext[qnameContext.uriID];
                         let uri = ns.uri;
-                        // console.log("inform handler (" + uri + ", " + qnameContext.localName + ")");
+                        // //console.log("inform handler (" + uri + ", " + qnameContext.localName + ")");
                         eh.startElement(uri, qnameContext.localName);
                     }
-                    console.log("seGrammar=" + seGrammar + ", startElementNamespaceID=" + qnameContext.uriID + ", startElementLocalNameID=" + qnameContext.localNameID);
+                    //console.log("seGrammar=" + seGrammar+ ", startElementNamespaceID=" + qnameContext.uriID + ", startElementLocalNameID=" + qnameContext.localNameID);
                     this.decodeElementContext(seGrammar, qnameContext.uriID, qnameContext.localNameID); // prod.startElementNamespaceID, prod.startElementLocalNameID
                     break;
                 case EventType.endElement:
                 case EventType.endElementGeneric:
                     var namespaceContextEE = this.grammars.qnames.namespaceContext[elementNamespaceID];
                     var qnameContextEE = namespaceContextEE.qnameContext[elementLocalNameID];
-                    console.log("<< EE (" + qnameContextEE.localName + ")");
+                    //console.log("<< EE (" + qnameContextEE.localName + ")");
                     for (let i = 0; i < this.eventHandler.length; i++) {
                         let eh = this.eventHandler[i];
                         eh.endElement(namespaceContextEE.uri, qnameContextEE.localName);
@@ -1226,11 +1226,11 @@ export class EXIDecoder extends AbtractEXICoder {
                     popStack = true;
                     break;
                 case EventType.attribute:
-                    // console.log("\t" + "Attribute qnameID " +
+                    // //console.log("\t" + "Attribute qnameID " +
                     // prod.attributeQNameID );
-                    // console.log("\t" + "Attribute name " +
+                    // //console.log("\t" + "Attribute name " +
                     // getQNameContext(prod.attributeQNameID).localName);
-                    // console.log("\t" + "Attribute datatypeID " +
+                    // //console.log("\t" + "Attribute datatypeID " +
                     // prod.attributeDatatypeID );
                     let datatypeA;
                     if (prod.attributeDatatypeID === undefined || prod.attributeDatatypeID < 0) {
@@ -1240,21 +1240,21 @@ export class EXIDecoder extends AbtractEXICoder {
                     else {
                         datatypeA = this.grammars.simpleDatatypes[prod.attributeDatatypeID];
                     }
-                    // console.log("\t" + "Attribute datatype " + datatype );
+                    // //console.log("\t" + "Attribute datatype " + datatype );
                     let namespaceContextA = this.grammars.qnames.namespaceContext[prod.attributeNamespaceID];
                     let qnameContextA = namespaceContextA.qnameContext[prod.attributeLocalNameID];
-                    console.log("\t" + "AT (" + qnameContextA.localName + ")");
+                    //console.log("\t" + "AT (" + qnameContextA.localName + ")");
                     this.decodeDatatypeValue(datatypeA, prod.attributeNamespaceID, prod.attributeLocalNameID, false);
                     break;
                 case EventType.attributeGeneric:
                     let atQName = this.decodeQName();
-                    console.log("\t" + "AT_Generic (" + atQName.localName + ")");
+                    //console.log("\t" + "AT_Generic (" + atQName.localName + ")");
                     this.decodeDatatypeValue(EXIDecoder.DEFAULT_SIMPLE_DATATYPE, atQName.uriID, atQName.localNameID, false);
                     this.learnAttribute(grammar, atQName);
                     nextGrammar = grammar;
                     break;
                 case EventType.characters:
-                    // console.log("\t" + "Characters datatypeID " +
+                    // //console.log("\t" + "Characters datatypeID " +
                     let datatypeC;
                     if (prod.charactersDatatypeID === undefined || prod.charactersDatatypeID < 0) {
                         // learned AT
@@ -1263,23 +1263,23 @@ export class EXIDecoder extends AbtractEXICoder {
                     else {
                         datatypeC = this.grammars.simpleDatatypes[prod.charactersDatatypeID];
                     }
-                    console.log("\t" + "CH");
+                    //console.log("\t" + "CH");
                     this.decodeDatatypeValue(datatypeC, elementNamespaceID, elementLocalNameID, true);
                     break;
                 case EventType.charactersGeneric:
-                    // console.log("\t" + "Characters datatype " + datatype );
-                    console.log("\t" + "CH_Generic");
+                    // //console.log("\t" + "Characters datatype " + datatype );
+                    //console.log("\t" + "CH_Generic");
                     this.decodeDatatypeValue(EXIDecoder.DEFAULT_SIMPLE_DATATYPE, elementNamespaceID, elementLocalNameID, true);
                     this.learnCharacters(grammar);
                     nextGrammar = grammar.elementContent;
                     break;
                 default:
-                    console.log("\t" + "Unknown event " + event);
+                    //console.log("\t" + "Unknown event " + event);
                     throw new Error("Unknown event " + event);
                 // TODO error!
                 // popStack = true;
             }
-            // console.log("\t" + "Event NextGrammarId " + prod.nextGrammarID);
+            // //console.log("\t" + "Event NextGrammarId " + prod.nextGrammarID);
             grammar = nextGrammar; // grammars.grs.grammar[prod.nextGrammarID];
         }
     }
@@ -1290,14 +1290,14 @@ export class EXIDecoder extends AbtractEXICoder {
     decodeUri() {
         let n = this.getCodeLength(this.grammars.qnames.namespaceContext.length + 1); // numberEntries+1
         let uriID = this.bitStream.decodeNBitUnsignedInteger(n, this.isByteAligned);
-        console.log("n = " + n + ", uriID = " + uriID);
+        //console.log("n = " + n + ", uriID = " + uriID );
         let namespaceContext;
         if (uriID == 0) {
             // string value was not found
             // ==> zero (0) as an n-nit unsigned integer
             // followed by uri encoded as string
             var uri = this.bitStream.decodeString();
-            console.log("decoded uri string = '" + uri + "'");
+            //console.log("decoded uri string = '" + uri + "'");
             // after encoding string value is added to table
             namespaceContext = { "uriID": this.grammars.qnames.namespaceContext.length, "uri": uri };
             this.grammars.qnames.namespaceContext.push(namespaceContext);
@@ -1306,7 +1306,7 @@ export class EXIDecoder extends AbtractEXICoder {
             // string value found
             // ==> value(i+1) is encoded as n-bit unsigned integer
             namespaceContext = this.grammars.qnames.namespaceContext[uriID - 1];
-            console.log("found existing uri = '" + namespaceContext.uri + "'");
+            //console.log("found existing uri = '" + namespaceContext.uri + "'");
         }
         return namespaceContext;
     }
@@ -1321,7 +1321,7 @@ export class EXIDecoder extends AbtractEXICoder {
             // After encoding the string value, it is added to the string table
             // partition and assigned the next available compact identifier.
             qnameContext = { "uriID": namespaceContext.uriID, "localNameID": namespaceContext.qnameContext.length, "localName": localName };
-            console.log("create new runtime qnameContext = '" + qnameContext + "'");
+            //console.log("create new runtime qnameContext = '" + qnameContext + "'");
             namespaceContext.qnameContext.push(qnameContext);
         }
         else {
@@ -1332,10 +1332,10 @@ export class EXIDecoder extends AbtractEXICoder {
             // n-bit unsigned integer
             // n is log2 m and m is the number of entries in the string table
             // partition
-            console.log("namespaceContext.qnameContext = '" + namespaceContext.qnameContext + "'");
+            //console.log("namespaceContext.qnameContext = '" + namespaceContext.qnameContext + "'");
             var n = this.getCodeLength(namespaceContext.qnameContext.length);
             var localNameID = this.bitStream.decodeNBitUnsignedInteger(n, this.isByteAligned);
-            console.log("decoded localName id = " + localNameID + " of existing localName " + namespaceContext.qnameContext[localNameID].localName);
+            //console.log("decoded localName id = " + localNameID + " of existing localName " + namespaceContext.qnameContext[localNameID].localName);
             qnameContext = namespaceContext.qnameContext[localNameID];
         }
         return qnameContext;
@@ -1343,22 +1343,22 @@ export class EXIDecoder extends AbtractEXICoder {
     decode(uint8Array) {
         this.init();
         this.bitStream = new BitInputStream(uint8Array);
-        console.log("JSON Grammars: " + this.grammars);
-        console.log("\t" + "Number of NamespaceContexts"
-            + Object.keys(this.grammars.qnames.namespaceContext).length);
-        // console.log("\t" + grammars.uris);
-        console.log("\t" + "numberOfUris:  " + this.grammars.qnames.namespaceContext.length);
-        console.log("\t" + "numberOfQNames:" + this.getNumberOfQNames(this.grammars));
-        console.log("EXI: " + uint8Array + " len=" + uint8Array.byteLength);
+        //console.log("JSON Grammars: " + this.grammars);
+        //console.log("\t" + "Number of NamespaceContexts"
+        //		+ Object.keys(this.grammars.qnames.namespaceContext).length);
+        // //console.log("\t" + grammars.uris);
+        //console.log("\t" + "numberOfUris:  " + this.grammars.qnames.namespaceContext.length);
+        //console.log("\t" + "numberOfQNames:" + this.getNumberOfQNames(this.grammars));
+        //console.log("EXI: " + uint8Array + " len=" + uint8Array.byteLength);
         // process header
         var errn = this.decodeHeader();
         if (errn === 0) {
             // process EXI body
             // Document grammar
-            console.log("\t" + "number of grammars: "
-                + this.grammars.grs.grammar.length);
-            console.log("\t" + "Document grammar ID: "
-                + this.grammars.grs.documentGrammarID);
+            //console.log("\t" + "number of grammars: "
+            //		+ this.grammars.grs.grammar.length);
+            //console.log("\t" + "Document grammar ID: "
+            //		+ this.grammars.grs.documentGrammarID);
             var docGr = this.getGrammar(this.grammars.grs.documentGrammarID);
             this.decodeElementContext(docGr, -1, -1);
         }
@@ -1807,7 +1807,7 @@ export class BitOutputStream {
         for (var i = 0; i < str.length; i++) {
             var cp = str.charCodeAt(i);
             this.encodeUnsignedInteger(cp, byteAligned);
-            console.log("char encoded " + cp);
+            //console.log("char encoded " + cp);
         }
     }
 }
@@ -1885,12 +1885,12 @@ export class EXIEncoder extends AbtractEXICoder {
         return 0;
     }
     processXMLElement(el) {
-        // console.log("SE " + el.nodeName);
+        // //console.log("SE " + el.nodeName);
         this.startElement(el.namespaceURI, el.localName);
         if (el.attributes != null && el.attributes.length > 0) {
             if (el.attributes.length > 1) {
                 if (this.grammars.isSchemaLess != undefined && this.grammars.isSchemaLess) {
-                    console.log("Do not sort attributes in schema-less mode");
+                    //console.log("Do not sort attributes in schema-less mode");
                     for (let i = 0; i < el.attributes.length; i++) {
                         var ati = el.attributes.item(i);
                         this.attribute(ati.namespaceURI, ati.localName, ati.nodeValue);
@@ -1898,10 +1898,10 @@ export class EXIEncoder extends AbtractEXICoder {
                 }
                 else {
                     // sorting
-                    console.log("Sort attributes in schema-informed mode");
+                    //console.log("Sort attributes in schema-informed mode");
                     let atts = [];
                     for (let i = 0; i < el.attributes.length; i++) {
-                        // console.log(" AT " + el.attributes[i].nodeName + " == " +
+                        // //console.log(" AT " + el.attributes[i].nodeName + " == " +
                         // el.attributes[i].nodeValue);
                         let at = el.attributes.item(i);
                         atts.push(at.localName);
@@ -1923,17 +1923,17 @@ export class EXIEncoder extends AbtractEXICoder {
                 }
             }
             else {
-                // console.log("AT length: " + el.attributes.length);
-                // console.log("AT all: " + el.attributes);
-                // console.log("AT1 " + el.attributes.item(0));
+                // //console.log("AT length: " + el.attributes.length);
+                // //console.log("AT all: " + el.attributes);
+                // //console.log("AT1 " + el.attributes.item(0));
                 var at1 = el.attributes.item(0);
-                // console.log("AT2 " + el.attributes[0]);
+                // //console.log("AT2 " + el.attributes[0]);
                 this.attribute(at1.namespaceURI, at1.localName, at1.nodeValue);
             }
         }
         let childNodes = el.childNodes;
         if (childNodes != null) {
-            // console.log("\tchildNodes.length" + childNodes.length);
+            // //console.log("\tchildNodes.length" + childNodes.length);
             for (let i = 0; i < childNodes.length; i++) {
                 // Attributes (type 1)
                 // Text (type 3)
@@ -1942,18 +1942,18 @@ export class EXIEncoder extends AbtractEXICoder {
                     let text = cn.nodeValue;
                     text = text.trim();
                     if (text.length > 0) {
-                        // console.log(" Text '" + text + "'");
+                        // //console.log(" Text '" + text + "'");
                         this.characters(text);
                     }
                 }
                 // Process only element nodes (type 1) further
                 if (cn.nodeType === 1) {
                     this.processXMLElement(cn);
-                    // console.log(childNodes[i].childNodes[0].nodeValue);
+                    // //console.log(childNodes[i].childNodes[0].nodeValue);
                 }
             }
         }
-        // console.log("EE " + el.nodeName);
+        // //console.log("EE " + el.nodeName);
         this.endElement();
     }
     getUint8Array() {
@@ -1966,16 +1966,16 @@ export class EXIEncoder extends AbtractEXICoder {
         this.init();
         this.bitStream = new BitOutputStream();
         this.elementContext = [];
-        console.log("numberOfQNames SD: " + this.getNumberOfQNames(this.grammars));
-        // console.log("Grammar SD: " + JSON.stringify(this.grammars));
+        //console.log("numberOfQNames SD: " + this.getNumberOfQNames(this.grammars));
+        // //console.log("Grammar SD: " + JSON.stringify(this.grammars));
         this.encodeHeader();
         // set grammar position et cetera
         // Document grammar
         console
             .log("\t" + "number of grammars: "
             + this.grammars.grs.grammar.length);
-        console.log("\t" + "Document grammar ID: "
-            + this.grammars.grs.documentGrammarID);
+        //console.log("\t" + "Document grammar ID: "
+        //		+ this.grammars.grs.documentGrammarID);
         let docGr = this.getGrammar(this.grammars.grs.documentGrammarID);
         let ec = -1;
         let prod;
@@ -1990,7 +1990,7 @@ export class EXIEncoder extends AbtractEXICoder {
             }
         }
         if (ec != -1) {
-            // console.log("\t" + "Event Code == " + ec );
+            // //console.log("\t" + "Event Code == " + ec );
             var codeLength = this.getCodeLengthForGrammar(docGr);
             this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
             let nextGrammar = this.getGrammar(prod.nextGrammarID);
@@ -2011,7 +2011,7 @@ export class EXIEncoder extends AbtractEXICoder {
             }
         }
         if (ec != -1) {
-            // console.log("\t" + "Event Code == " + ec );
+            // //console.log("\t" + "Event Code == " + ec );
             let codeLength = this.getCodeLengthForGrammar(grammar);
             this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
             // pop element stack
@@ -2024,14 +2024,14 @@ export class EXIEncoder extends AbtractEXICoder {
             throw new Error("Element context not balanced");
         }
         this.bitStream.align();
-        console.log("numberOfQNames ED: " + this.getNumberOfQNames(this.grammars));
-        // console.log("Grammar ED: " + JSON.stringify(this.grammars));
+        //console.log("numberOfQNames ED: " + this.getNumberOfQNames(this.grammars));
+        // //console.log("Grammar ED: " + JSON.stringify(this.grammars));
     }
     startElement(namespace, localName) {
         if (namespace === null) {
             namespace = "";
         }
-        console.log("SE {" + namespace + "}" + localName);
+        //console.log("SE {" + namespace + "}" + localName);
         let isSE = false;
         let isSE_NS = false;
         let isSE_GENERIC = false;
@@ -2042,7 +2042,7 @@ export class EXIEncoder extends AbtractEXICoder {
         let qnameContext;
         for (let i = 0; ec === -1 && i < grammar.production.length; i++) {
             prod = grammar.production[i];
-            // console.log("\t" + "Prod " + i + prod.event);
+            // //console.log("\t" + "Prod " + i + prod.event);
             if (prod.event === EventType.startElement) {
                 namespaceContext = this.grammars.qnames.namespaceContext[prod.startElementNamespaceID];
                 qnameContext = namespaceContext.qnameContext[prod.startElementLocalNameID];
@@ -2065,10 +2065,10 @@ export class EXIEncoder extends AbtractEXICoder {
         }
         if (ec != -1) {
             // event-code found
-            // console.log("\t" + "Event Code == " + ec );
+            // //console.log("\t" + "Event Code == " + ec );
             let codeLength = this.getCodeLengthForGrammar(grammar);
             this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
-            console.log("SE encoded " + ec + " in " + codeLength);
+            //console.log("SE encoded " + ec + " in " + codeLength);
             let startElementGrammar;
             if (isSE || isSE_NS || isSE_GENERIC) {
                 // ok
@@ -2081,7 +2081,7 @@ export class EXIEncoder extends AbtractEXICoder {
             // update current element context
             let nextGrammar = this.getGrammar(prod.nextGrammarID);
             this.elementContext[this.elementContext.length - 1].grammar = nextGrammar;
-            console.log("NextGrammar after SE/SE_NS " + localName + " is " + nextGrammar);
+            //console.log("NextGrammar after SE/SE_NS " + localName + " is " + nextGrammar);
             // push new element context
             if (isSE) {
                 // SE(uri:localname)
@@ -2110,21 +2110,21 @@ export class EXIEncoder extends AbtractEXICoder {
                 // 1st level
                 let codeLength1 = this.getCodeLengthForGrammar(grammar);
                 this.bitStream.encodeNBitUnsignedInteger(grammar.production.length, codeLength1, this.isByteAligned);
-                console.log("SE1 encoded " + grammar.production.length + " in " + codeLength1);
+                //console.log("SE1 encoded " + grammar.production.length + " in " + codeLength1);
                 // 2nd level
                 let codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
                 let ec2 = this.get2ndEventCode(grammar, EventType.startElementGeneric);
                 this.bitStream.encodeNBitUnsignedInteger(ec2, codeLength2, this.isByteAligned); //2 in 2 bits
-                console.log("SE2 encoded " + ec2 + " in " + codeLength2);
+                //console.log("SE2 encoded " + ec2 + " in " + codeLength2);
                 // encode qname
                 let qnameContext = this.encodeQName(namespace, localName);
-                console.log("SE qname encoded");
+                //console.log("SE qname encoded");
                 let startElementGrammar = this.getGlobalStartElement(qnameContext);
                 // learn SE
                 this.learnStartElement(grammar, startElementGrammar.grammarID, qnameContext);
                 // update current element context
                 this.elementContext[this.elementContext.length - 1].grammar = grammar.elementContent;
-                console.log("NextGrammar after SE_Generic_Undefined " + localName + " is " + this.elementContext[this.elementContext.length - 1].grammar);
+                //console.log("NextGrammar after SE_Generic_Undefined " + localName + " is " + this.elementContext[this.elementContext.length - 1].grammar);
                 this.elementContext.push(new ElementContextEntry(qnameContext.uriID, qnameContext.localNameID, startElementGrammar));
                 // } else if(grammar.type === GrammarType.builtInElementContent) {
                 // 	throw new Error("TODO SE elementContent grammar. grammar.type = " + grammar.type);
@@ -2146,7 +2146,7 @@ export class EXIEncoder extends AbtractEXICoder {
             // ==> zero (0) as an n-nit unsigned integer
             // followed by uri encoded as string
             this.bitStream.encodeNBitUnsignedInteger(0, n, this.isByteAligned);
-            console.log("Uri miss encoded " + 0 + " in " + n);
+            //console.log("Uri miss encoded " + 0 + " in " + n);
             this.bitStream.encodeStringOnly(namespace, this.isByteAligned);
             // after encoding string value is added to table
             namespaceContext = new NamespaceContext();
@@ -2159,7 +2159,7 @@ export class EXIEncoder extends AbtractEXICoder {
             // string value found
             // ==> value(i+1) is encoded as n-bit unsigned integer
             this.bitStream.encodeNBitUnsignedInteger(namespaceContext.uriID + 1, n, this.isByteAligned);
-            console.log("Uri hit encoded " + (namespaceContext.uriID + 1) + " in " + n);
+            //console.log("Uri hit encoded " + (namespaceContext.uriID + 1) + " in " + n);
         }
         return namespaceContext;
     }
@@ -2170,7 +2170,7 @@ export class EXIEncoder extends AbtractEXICoder {
             // ==> string literal is encoded as a String
             // with the length of the string incremented by one
             this.bitStream.encodeUnsignedInteger(localName.length + 1, this.isByteAligned);
-            console.log("localName miss encoded " + (localName.length + 1));
+            //console.log("localName miss encoded " + (localName.length + 1) );
             this.bitStream.encodeStringOnly(localName, this.isByteAligned);
             // After encoding the string value, it is added to the string
             // table partition and assigned the next available compact
@@ -2182,19 +2182,19 @@ export class EXIEncoder extends AbtractEXICoder {
             qnameContext.localNameID = namespaceContext.qnameContext.length;
             qnameContext.localName = localName;
             // qnameContext = {"uriID": namespaceContext.uriID, "localNameID": namespaceContext.qnameContext.length, "localName": localName};
-            console.log("create new runtime qnameContext for '" + localName + "', uriId=" + qnameContext.uriID + " and localNameID=" + qnameContext.localNameID);
+            //console.log("create new runtime qnameContext for '" + localName + "', uriId=" + qnameContext.uriID + " and localNameID=" + qnameContext.localNameID );
             // this.runtimeQNameContexts.push(qnameContext);
             // NOTE: Java Nahsorn seems to add an "undefined" entry up-front!?
             let qnameContextLengthBefore = namespaceContext.qnameContext.length;
-            // console.log("QName length before: " + qnameContextLengthBefore)
+            // //console.log("QName length before: " + qnameContextLengthBefore)
             if (qnameContextLengthBefore == 0) {
                 namespaceContext.qnameContext = new Array();
             }
             namespaceContext.qnameContext.push(qnameContext);
             for (let i = 0; i < namespaceContext.qnameContext.length; i++) {
-                console.log("\t" + i + "\t" + namespaceContext.qnameContext[i].localName);
+                //console.log("\t" + i + "\t" + namespaceContext.qnameContext[i].localName)
             }
-            // console.log("QName length after: " + namespaceContext.qnameContext.length);
+            // //console.log("QName length after: " + namespaceContext.qnameContext.length);
         }
         else {
             // string value found in local partition
@@ -2203,15 +2203,15 @@ export class EXIEncoder extends AbtractEXICoder {
             // string value as an n-bit unsigned integer n is log2 m and m is
             // the number of entries in the string table partition
             this.bitStream.encodeUnsignedInteger(0, this.isByteAligned);
-            console.log("localName hit1 encoded " + 0);
+            //console.log("localName hit1 encoded " + 0);
             var n = this.getCodeLength(namespaceContext.qnameContext.length);
             this.bitStream.encodeNBitUnsignedInteger(qnameContext.localNameID, n, this.isByteAligned);
-            console.log("localName hit2 encoded " + qnameContext.localNameID + " in " + n);
+            //console.log("localName hit2 encoded " + qnameContext.localNameID + " in " + n);
         }
         return qnameContext;
     }
     endElement() {
-        console.log("EE");
+        //console.log("EE");
         let ec = -1;
         let prod;
         let grammar = this.elementContext[this.elementContext.length - 1].grammar;
@@ -2222,10 +2222,10 @@ export class EXIEncoder extends AbtractEXICoder {
             }
         }
         if (ec != -1) {
-            // console.log("\t" + "Event Code == " + ec );
+            // //console.log("\t" + "Event Code == " + ec );
             let codeLength = this.getCodeLengthForGrammar(grammar);
             this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
-            console.log("EE encoded " + ec + " in " + codeLength);
+            //console.log("EE encoded " + ec + " in " + codeLength);
             // pop element stack
             this.elementContext.pop();
         }
@@ -2234,12 +2234,12 @@ export class EXIEncoder extends AbtractEXICoder {
                 // 1st level
                 let codeLength1 = this.getCodeLengthForGrammar(grammar);
                 this.bitStream.encodeNBitUnsignedInteger(grammar.production.length, codeLength1, this.isByteAligned);
-                console.log("EE1 encoded " + grammar.production.length + " in " + codeLength1);
+                //console.log("EE1 encoded " + grammar.production.length + " in " + codeLength1);
                 // 2nd level
                 let codeLength2 = this.get2ndCodeLengthForGrammar(grammar);
                 let ec2 = this.get2ndEventCode(grammar, EventType.endElementGeneric);
                 this.bitStream.encodeNBitUnsignedInteger(ec2, codeLength2, this.isByteAligned);
-                console.log("EE2 encoded " + ec2 + " in " + codeLength2);
+                //console.log("EE2 encoded " + ec2 + " in " + codeLength2);
                 // learn EE
                 this.learnEndElement(grammar);
                 // pop element stack
@@ -2254,8 +2254,8 @@ export class EXIEncoder extends AbtractEXICoder {
         if (namespace === null) {
             namespace = "";
         }
-        console.log("\tAT {" + namespace + "}" + localName + " == '" + value
-            + "'");
+        //console.log("\tAT {" + namespace + "}" + localName + " == '" + value
+        //		+ "'");
         if ("http://www.w3.org/2000/xmlns/" === namespace) {
             // TODO namespace declaration
         }
@@ -2278,7 +2278,7 @@ export class EXIEncoder extends AbtractEXICoder {
                 }
             }
             if (ec != -1) {
-                // console.log("\t" + "Event Code == " + ec );
+                // //console.log("\t" + "Event Code == " + ec );
                 let codeLength = this.getCodeLengthForGrammar(grammar);
                 this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
                 // write value
@@ -2319,7 +2319,7 @@ export class EXIEncoder extends AbtractEXICoder {
         }
     }
     characters(chars) {
-        console.log("\tCharacters '" + chars + "'");
+        //console.log("\tCharacters '" + chars + "'");
         let ec = -1;
         let prod;
         let grammar = this.elementContext[this.elementContext.length - 1].grammar;
@@ -2330,7 +2330,7 @@ export class EXIEncoder extends AbtractEXICoder {
             }
         }
         if (ec != -1) {
-            // console.log("\t" + "Event Code == " + ec );
+            // //console.log("\t" + "Event Code == " + ec );
             let codeLength = this.getCodeLengthForGrammar(grammar);
             this.bitStream.encodeNBitUnsignedInteger(ec, codeLength, this.isByteAligned);
             // write value
@@ -2520,7 +2520,7 @@ export class EXIEncoder extends AbtractEXICoder {
         else if (datatype.type === SimpleDatatypeType.LIST) {
             var resArray = value.split(" ");
             this.bitStream.encodeUnsignedInteger(resArray.length, this.isByteAligned);
-            console.log("\t" + " LIST with length " + resArray.length + ": " + resArray);
+            //console.log("\t" + " LIST with length " + resArray.length + ": " + resArray);
             for (var i = 0; i < resArray.length; i++) {
                 var v = resArray[i];
                 if (datatype.listType === SimpleDatatypeType.STRING) {
@@ -2580,17 +2580,17 @@ export class EXIEncoder extends AbtractEXICoder {
         }
     }
     encodeDatatypeValueUnsignedInteger(value, namespaceID, localNameID) {
-        console.log("\t" + " UNSIGNED_INTEGER = " + value);
+        //console.log("\t" + " UNSIGNED_INTEGER = " + value);
         this.bitStream.encodeUnsignedInteger(parseInt(value), this.isByteAligned);
     }
     encodeDatatypeValueInteger(value, namespaceID, localNameID) {
-        console.log("\t" + " INTEGER = " + value);
+        //console.log("\t" + " INTEGER = " + value);
         this.bitStream.encodeInteger(parseInt(value), this.isByteAligned);
     }
     encodeDatatypeValueFloat(value, namespaceID, localNameID) {
         var f = parseFloat(value);
         // 
-        console.log("\t" + " floatA = " + f);
+        //console.log("\t" + " floatA = " + f);
         // var fl = decodeIEEE64(f);
         // var fl = getNumberParts(f);
         var fl = this.getEXIFloat(f);
@@ -2648,8 +2648,8 @@ export class EXIEncoder extends AbtractEXICoder {
         else {
             this.bitStream.encodeNBitUnsignedInteger(0, 1, this.isByteAligned);
         }
-        // console.log("\t" + " presenceTimezone = " + presenceTimezone);
-        console.log("\t" + " datetime = " + sDatetime);
+        // //console.log("\t" + " presenceTimezone = " + presenceTimezone);
+        //console.log("\t" + " datetime = " + sDatetime);
     }
 }
 /*******************************************************************************
@@ -2742,7 +2742,7 @@ export class EXI4JSONEncoder extends EXIEncoder {
             if (jsonObj.hasOwnProperty(key)) {
                 /* useful code here */
                 let val = jsonObj[key];
-                console.log("JSON " + key + ": " + val);
+                //console.log("JSON " + key + ": " + val);
                 if (val instanceof Array) {
                     this.startElement(exiForJsonUri, EXI4JSONEncoder.escapeKey(key));
                     this.startElement(exiForJsonUri, "array");
@@ -3156,7 +3156,7 @@ export class JSONEventHandler extends EventHandler {
     attribute(namespace, localName, value) {
     }
     characters(chars) {
-        console.log("chars: " + chars);
+        //console.log("chars: " + chars);
         this.chars = chars;
     }
 }
